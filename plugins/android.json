@@ -1,0 +1,24 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-bluetooth-serial": {
+            "PACKAGE_NAME": "com.andrasani.pitching"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.andrasani.pitching"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.andrasani.pitching"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.andrasani.pitching"
+        }
+    },
+    "dependent_plugins": {}
+}
