@@ -4,11 +4,16 @@
 var app=angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','starter.services']);
 
 app.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvider){
-
   
 	$logProvider.debugEnabled(true);
  
 	$routeProvider
+    .when('/login', {
+      templateUrl: 'pages/login/loginTemplate.html',
+      controller: 'accountController',
+      controllerAs: 'account',
+    })
+
   	.when('/home', {
   			templateUrl: 'pages/home/home.html',
   			controller: 'homeController',
@@ -28,6 +33,13 @@ app.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvi
 
 
 }]);
+
+app.run(function(AccountService){
+  AccountService.currentUser()
+    .then(function(user) {
+      window.localStorage['user'] = user;
+    })
+});
 
 
 })(this);

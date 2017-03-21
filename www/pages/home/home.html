@@ -1,13 +1,24 @@
-<div>Home Page</div>
+<div class="scrollable">
+  <div class="scrollable-content">
 
-<div style="width:100%;" id="ct-chart" class="ct-perfect-fourth"></div>
+    <div class="section">
+		<h3>Home Page</h3>
+	</div>
 
-<div ng-if="!connected" style="width:30%;background-color:orange;text-align:center;" ng-click="connect()">connect</div>
+	<div class="section">
+		<h5>Current Pitcher: {{chosenPitcher.name}}</h5>
+	</div>
 
-<div ng-if="connected" style="width:30%;background-color:orange;text-align:center;" ng-click="disconnect()">disconnect</div>
+	<div class="section">
+		<div ng-if="!connected" style="width:30%;background-color:orange;text-align:center;" ng-click="connect()">connect</div>
 
-<div ng-if="connecting"> CONNECTING </div>
+		<button class="btn btn-primary">START</button>
 
-<div ng-if="connected && streaming" style="position:absolute;bottom:10px;left:10px;right:10px;background-color:red;height:10%;text-align:center;" ng-click="stop()">Stop</div>
+		<div ng-if="connected" style="width:30%;background-color:orange;text-align:center;" ng-click="disconnect()">disconnect</div>
 
-<div ng-if="connected && !streaming" style="position:absolute;bottom:10px;left:10px;right:10px;background-color:green;height:10%;text-align:center" ng-click="start()">Start</div>
+		<div ng-if="connecting"> CONNECTING </div>
+
+		<div ng-if="connected && streaming" style="position:absolute;bottom:10px;left:10px;right:10px;background-color:red;height:10%;text-align:center;" ng-click="stop()">Stop</div>
+
+		<div ng-if="connected && !streaming" style="position:absolute;bottom:10px;left:10px;right:10px;background-color:green;height:10%;text-align:center" ng-click="start()">Start</div>
+	</div>

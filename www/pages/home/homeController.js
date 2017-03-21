@@ -5,11 +5,7 @@ angular.module(gScope.AppNameId)
 
 
 function init($scope,$log,chartService,bluetoothService){
-	var DATA_PLOT_LIMIT = 50;
-	var startTime;
-	var targetChart = '#ct-chart';
 
-	chartService.makeChart(targetChart,null);
 	console.log(bluetoothService);
 	$scope.connected = false;
 	$scope.connecting = false;
@@ -19,8 +15,6 @@ function init($scope,$log,chartService,bluetoothService){
 	$scope.streaming = false;
 	$scope.start = start;
 	$scope.stop = stop;
-
-	$scope.data = [];
 
 	function connect(){
 		$scope.connecting = true;
@@ -51,20 +45,6 @@ function init($scope,$log,chartService,bluetoothService){
 	function stop(){
 		$scope.streaming = false;
 		bluetoothService.stop();
-	}
-
-	function dataHandler(dataPoint){
-		var r = {};
-        r.x = new Date().getTime() / 1000 - startTime;
-        r.y = dataPoint.volt;
-        $scope.data.push(r);
-        plot();
-	}
-
-	function plot(){
-		 if($scope.data.length > DATA_PLOT_LIMIT){
-            chartService.setData(targetChart, $scope.data.slice($scope.data.length-DATA_PLOT_LIMIT,$scope.data.length));
-        } else chartService.setData(targetChart, $scope.data);
 	}
 
 }
