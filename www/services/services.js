@@ -32,16 +32,16 @@ angular.module('starter.services', [])
   return {
 
     getPitchers : function(query) {
-      var deffered = $q.defer();
+      var def = $q.defer();
 
       Stamplay.Object('pitchers').get({})
       // .findByCurrentUser(["owner"])
       .then(function(response) {
-        deffered.resolve(response.data)
+        def.resolve(response.data)
       }, function(err) {
-        deffered.reject(err);
+        def.reject(err);
       })
-      return deffered.promise;
+      return def.promise;
     }
   
   }
@@ -52,16 +52,16 @@ angular.module('starter.services', [])
   return {
 
     getTeams : function(query) {
-      var deffered = $q.defer();
+      var def = $q.defer();
 
       Stamplay.Object('teams').get({})
       // .findByCurrentUser(["owner"])
       .then(function(response) {
-        deffered.resolve(response.data)
+        def.resolve(response.data)
       }, function(err) {
-        deffered.reject(err);
+        def.reject(err);
       })
-      return deffered.promise;
+      return def.promise;
     }
   
   }

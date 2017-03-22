@@ -6,6 +6,7 @@
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
         
+        <base href="/">
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
@@ -36,9 +37,7 @@
             <span>RIGHT HELLO</span>
         </div>
 
-        <div class="app"
-            ui-swipe-right="Ui.turnOn('uiSidebarLeft')"
-            ui-swipe-left="Ui.turnOff('uiSidebarLeft')">
+        <div class="app" ui-swipe-right="Ui.turnOff('uiSidebarLeft')" ui-swipe-left="Ui.turnOn('uiSidebarRight')">
             
             <!-- Top Navbar -->
             <div class="navbar navbar-app navbar-absolute-top">
@@ -52,15 +51,15 @@
                 </div>
                 <div class="btn-group pull-right" ui-yield-to="navbarAction">
                   <div ui-toggle="uiSidebarRight" class="btn sidebar-right-toggle">
-                    <i class="fa fa-comment"></i> Pitchers
+                    <i class="fa fa-user"></i> Pitchers
                   </div>
-                </div>
+                </div>q
             </div>
 
             <!-- Bottom Navbar -->
             <div class="navbar navbar-app navbar-absolute-bottom">
                 <div class="btn-group justified">
-                  <a href="/docs" class="btn btn-navbar"><i class="fa fa-home fa-navbar"></i> Instructions</a>
+                  <a href="/docs" class="btn btn-navbar"><i class="fa fa-info-circle"></i> Instructions</a>
                   <a href="" class="btn btn-navbar"><i class="fa fa-exclamation-circle fa-navbar"></i> Issues</a>
                 </div>
             </div>
@@ -71,7 +70,7 @@
                   <i class="fa fa-spinner fa-spin loading-spinner"></i>
                 </div>
                 <div class='app-content'>
-                    <div id="view_root" ng-view >
+                    <div id="view_root" ng-view>
 
                     </div>
                 </div>

@@ -1,18 +1,30 @@
-body {
-    margin: 0;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #333;
-    background-color: #fff;
-    font-weight: 400;
-}
+@import url('https://fonts.googleapis.com/css?family=Lobster');
 
-.navbar *{
-	background-color: lightsteelblue;
-	color: black !important;
-}
+/*----------------------------------------------------------------------
+ MAIN 
+ ---------------------------------------------------------------------*/
+body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1.4; color: #333; background-color: #fff; font-weight: 400; }
 
-.scrollable-content{
-	background-color: #fff;
-}
+/* main scrollable bkgd color */
+.scrollable-content{ background-color: #ffffff; }
+
+/*----------------------------------------------------------------------
+ NAVBAR
+ ---------------------------------------------------------------------*/
+.navbar * { background-color: #505b66; color: #ffffff; }
+.navbar-brand { font-family: 'Lobster', cursive; font-size: 20px; }
+.navbar-app .btn, .navbar-app .btn-navbar { color: #ffffff; opacity: 1 !important; }
+.list-group-item.active, .list-group-item.active:focus { background-color: #95abbe; border-color: #8699ab; }
+
+/* left nav */
+h1.scrollable-header.app-name { font-family: 'Lobster', cursive; }
+h1.scrollable-header.app-name small { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #a7adb2; }
+.sidebar-left, .sidebar-right { background: #505b66; }
+
+/*----------------------------------------------------------------------
+ FORMS
+ ---------------------------------------------------------------------*/
+legend { font-family: 'Lobster', cursive; color: #7a848e; font-size: 28px; }
+.btn.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+.switch.active { background-color: #95abbe; border: 1px solid #8699ab; }
+.switch.active .switch-handle { border-color: #8699ab; }

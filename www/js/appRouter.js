@@ -3,7 +3,7 @@
 
 var app=angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','starter.services']);
 
-app.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvider){
+app.config(['$routeProvider', '$logProvider', '$locationProvider', function($routeProvider, $logProvider,$locationProvider){
   
 	$logProvider.debugEnabled(true);
  
@@ -14,7 +14,7 @@ app.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvi
       controllerAs: 'account',
     })
 
-  	.when('/home', {
+  	.when('/', {
   			templateUrl: 'pages/home/home.html',
   			controller: 'homeController',
   			controllerAs: 'home',
@@ -29,8 +29,10 @@ app.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvi
         controller: 'splashController',
         conterollerAs: 'splash',
     })
-  	.otherwise({redirectTo: '/splash'});
+  	.otherwise({redirectTo: '/'});
 
+    // use the HTML5 History API
+    $locationProvider.html5Mode(true);
 
 }]);
 
