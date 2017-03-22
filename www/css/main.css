@@ -3,7 +3,10 @@
 /*----------------------------------------------------------------------
  MAIN 
  ---------------------------------------------------------------------*/
-body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1.4; color: #666666; background-color: #fff; font-weight: 400; }
+body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1.4; color: #666666; background: #ffffff; font-weight: 400; }
+
+/* main background color for entire app */
+#app_root { background: #95abbe; }
 
 /* main scrollable bkgd color */
 .scrollable-content{ background-color: #ffffff; }
@@ -25,6 +28,10 @@ a.list-group-item, button.list-group-item { color: #505b66; }
 /*----------------------------------------------------------------------
  SPLASH
  ---------------------------------------------------------------------*/
+#splash-content { position: absolute; top: 50%; left: 50%; margin-top: -100px; margin-left: -115px; text-align: center; width: 230px; height: 200px; }
+#splash-content h1 { font-family: 'Lobster', cursive; font-size: 32px; color: #ffffff; }
+#splash-content h1 sup { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #778898; font-size: 12px; line-height: 1; }
+img.splash { border: 6px solid #ffffff; border-radius: 60px; }
 
 /*----------------------------------------------------------------------
  FORMS
