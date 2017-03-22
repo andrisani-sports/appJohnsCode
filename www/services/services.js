@@ -37,7 +37,19 @@ angular.module('starter.services', [])
       Stamplay.Object('pitchers').get({})
       // .findByCurrentUser(["owner"])
       .then(function(response) {
-        def.resolve(response.data)
+        def.resolve(response.data);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    },
+
+    getPitcher : function(id) {
+      var def = $q.defer();
+
+      Stamplay.Object('pitchers').get({ _id : id})
+      .then(function(response) {
+        def.resolve(response.data);
       }, function(err) {
         def.reject(err);
       })

@@ -39,6 +39,11 @@ app.config(['$routeProvider', '$logProvider', '$locationProvider', function($rou
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
+    .when('/pitcher/:id', {
+        templateUrl:'pages/pitchers/viewPitcher.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
   	.otherwise({redirectTo: '/'});
 
     // use the HTML5 History API
