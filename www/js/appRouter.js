@@ -29,6 +29,16 @@ app.config(['$routeProvider', '$logProvider', '$locationProvider', function($rou
         controller: 'splashController',
         conterollerAs: 'splash',
     })
+    .when('/pitchers', {
+        templateUrl:'pages/pitchers/listPitchers.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
+    .when('/add-pitcher', {
+        templateUrl:'pages/pitchers/addPitcher.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
   	.otherwise({redirectTo: '/'});
 
     // use the HTML5 History API

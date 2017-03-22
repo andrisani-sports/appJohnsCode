@@ -1,0 +1,27 @@
+<div class="scrollable">
+ <div class="scrollable-content section">
+		<legend>Pitcher List <a href="/add-pitcher" class="btn btn-primary pull-right"><i class="fa fa-plus"></i></a></legend>
+		<ul class="list-group">
+		  <li class="list-group-item" ng-repeat="p in pitchers">
+		  	<div class="btn-group pull-right">
+				  <a ui-turn-on="myDropdown" class="btn" style="padding-top: 0;">
+				    <i class="fa fa-ellipsis-v"></i>
+				  </a>
+				  <ul class="dropdown-menu"
+				    ui-outer-click="Ui.turnOff('myDropdown')"
+				    ui-outer-click-if="Ui.active('myDropdown')"
+				    role="menu"
+				    ui-show="myDropdown" 
+				    ui-state="myDropdown"
+				    ui-turn-off="myDropdown">
+
+				    <li><a href="">Pitcher Profile</a></li>
+				    <li><a href="">Edit Pitcher</a></li>
+				    <li><a href="" ng-click="choosePitcher(p)">Run Test</a></li>
+				  </ul>
+				</div>
+		  	{{p.name}}
+		  </li>
+		</ul>
+	</div><!-- /.scrollable-content -->
+</div><!-- /.scrollable -->

@@ -22,7 +22,7 @@ function init(AccountService, $state, $rootScope){
     Stamplay.User.login(vm.user)
     .then(function(user) {
       window.localStorage['user'] = JSON.stringify(user);
-      $state.go("app.start");
+      console.log('Logged in!');
     }, function(error) {
       // $ionicLoading.hide();
       errorHandler({
