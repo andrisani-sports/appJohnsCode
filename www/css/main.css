@@ -43,7 +43,9 @@ textarea { max-width: 100%; }
 .btn { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
 .btn-small { padding: 3px 6px; }
 .btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
 .btn-success { background: #3cad50; border-color: #359746; }
+.btn-success.active, .btn-success:active, .open>.dropdown-toggle.btn-success { color: #ffffff; background-color: #3cad50; border-color: #359746; }
 .btn-default { border-color: #8699ab; }
 
 /*----------------------------------------------------------------------
