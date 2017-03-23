@@ -12,7 +12,7 @@ function($log, $scope, fhsCordova, $rootScope, SharedState){
 		};
 
 		SharedState.initialize($scope, 'modal1');
-    	SharedState.initialize($scope, 'modal2');
+    SharedState.initialize($scope, 'modal2');
 
  		$scope.$on(fhsCordova.RESUME, resume);
 		$scope.$on(fhsCordova.PAUSE, pause);

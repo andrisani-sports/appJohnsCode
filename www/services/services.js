@@ -125,6 +125,32 @@ angular.module('starter.services', [])
   }
 }])
 
+.factory('IssueService', ["$rootScope", "$q", function($rootScope, $q) {
+
+  return {
+
+    sendIssue : function(issue) {
+      var def = $q.defer();
+
+      var data = {
+        name: issue.name,
+        email: issue.email,
+        message : issue.message
+      }
+
+      Stamplay.Object('issues').save(data)
+      .then(function(response) {
+        console.log('new issue', response);
+        def.resolve(response);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    }
+  }
+  
+}])
+
 .factory('TeamService', ["$rootScope", "$q", function($rootScope, $q) {
 
   return {

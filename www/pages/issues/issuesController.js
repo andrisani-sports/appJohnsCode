@@ -1,12 +1,17 @@
 (function(gScope){
 	
 angular.module(gScope.AppNameId)
-	.controller('issuesController', ['$scope','$log', 'chartService', 'bluetoothService', init]);
+	.controller('issuesController', ['$scope', '$rootScope', '$log', '$location', 'chartService', 'bluetoothService', 'IssueService', init]);
 
 
-function init($scope,$log,chartService,bluetoothService){
+function init($scope,$rootScope,$log,$location,chartService,bluetoothService,IssueService){
 
-
+	// send issue
+	$scope.sendIssue = function(issue) {
+		IssueService.sendIssue(issue).then(function(result){
+			$rootScope.Ui.turnOff('modal2');
+		});
+	}
 
 }
 
