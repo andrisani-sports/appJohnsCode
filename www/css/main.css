@@ -37,11 +37,23 @@ img.splash { border: 6px solid #ffffff; border-radius: 60px; }
  FORMS
  ---------------------------------------------------------------------*/
 legend { font-family: 'Lobster', cursive; color: #7a848e; font-size: 28px; }
-.btn.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+
+/* switch */
 .switch.active { background-color: #95abbe; border: 1px solid #8699ab; }
 .switch.active .switch-handle { border-color: #8699ab; }
+
+/* inputs */
 textarea { max-width: 100%; }
+.ng-dirty input.ng-invalid, input.ng-invalid, textarea.ng-invalid { border-color: #ff6259; }
+
+/* buttons */
 .btn { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+.btn-small { padding: 3px 6px; }
+.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+.btn-success { background: #3cad50; border-color: #359746; }
+.btn-success.active, .btn-success:active, .open>.dropdown-toggle.btn-success { color: #ffffff; background-color: #3cad50; border-color: #359746; }
+.btn-default { border-color: #8699ab; }
 
 /*----------------------------------------------------------------------
  MODALS

@@ -4,21 +4,25 @@
   <form role="form" ng-submit='account.login(account.user)'>
     <fieldset>
       <legend>Login</legend>
-        <div class="form-group has-success has-feedback">
+        <div class="form-group has-feedback">
           <label>Email</label>
           <input type="email"
                  ng-model="account.user.email"
                  class="form-control"
-                 placeholder="Enter email">
+                 placeholder="Enter email"
+                 required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group has-feedback">
           <label>Password</label>
+
           <input 
             type="password" 
             ng-model="account.user.password"
             class="form-control"
-            placeholder="Password">
+            placeholder="Password"
+            required>
+
         </div>
 
         <div class="form-group">

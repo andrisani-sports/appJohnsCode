@@ -60,6 +60,51 @@ angular.module('starter.services', [])
 
   return {
 
+    createPitcher : function(pitcher) {
+      var def = $q.defer();
+
+      var data = {
+        name: pitcher.name,
+        age: pitcher.age,
+        height : pitcher.height,
+        weight : pitcher.weight,
+        stride_length : pitcher.stride_length,
+        device_height : pitcher.device_height,
+        // team: pitcher.team
+      }
+
+      Stamplay.Object('pitchers').save(data)
+      .then(function(response) {
+
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        }
+        function guid() {
+          return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        }
+        
+        var uuid = guid();
+        var pitcherID = response._id;
+        var updateData = {
+          unique_id: uuid
+        }
+        
+        Stamplay.Object('pitchers').update(pitcherID, updateData)
+        .then(function(response) {
+          def.resolve(response);
+        }, function(err) {
+          def.reject(err);
+        })
+        return def.promise;
+        
+
+        def.resolve(response);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    },
+
     getPitchers : function(query) {
       var def = $q.defer();
 
@@ -83,7 +128,28 @@ angular.module('starter.services', [])
         def.reject(err);
       })
       return def.promise;
-    }
+    },
+
+    updatePitcher : function(pitcher) {
+      var def = $q.defer();
+
+      var data = {
+        name: pitcher.name,
+        age: pitcher.age,
+        height : pitcher.height,
+        weight : pitcher.weight,
+        stride_length : pitcher.stride_length,
+        device_height : pitcher.device_height
+      }
+
+      Stamplay.Object('pitchers').update(pitcher._id, data)
+      .then(function(response) {
+        def.resolve(response);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    }    
   
   }
 }])

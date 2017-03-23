@@ -10,12 +10,32 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 	});
 
 	if ($routeParams.id) {
+		// set id from $routeParams
 		var id = $routeParams.id;
+		
+
+		// get pitcher by $routeParams.id
 		PitcherService.getPitcher(id).then(function(result){
 			$scope.pitcher = result[0];
-		});	
+		});
+
 	}
 
+	// create pitcher
+	$scope.createPitcher = function(pitcher) {
+		PitcherService.createPitcher(pitcher).then(function(result){
+			$location.path('/');	
+		});
+	}
+
+	// update pitcher
+	$scope.updatePitcher = function(pitcher) {
+		PitcherService.updatePitcher(pitcher).then(function(result){
+			$location.path('/pitchers');	
+		});
+	}
+	
+	// choose pitcher to run test
 	$scope.choosePitcher = function(pitcher){
 		$rootScope.chosenPitcher = pitcher;
 		$location.path('/home');

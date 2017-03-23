@@ -44,13 +44,18 @@ function($routeProvider, $logProvider,$locationProvider){
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
-    .when('/add-pitcher', {
+    .when('/pitcher/add', {
         templateUrl:'pages/pitchers/addPitcher.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
     .when('/pitcher/:id', {
         templateUrl:'pages/pitchers/viewPitcher.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
+    .when('/pitcher/edit/:id', {
+        templateUrl:'pages/pitchers/editPitcher.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })

@@ -1,6 +1,12 @@
 <div class="scrollable">
  <div class="scrollable-content section">
-		<legend>Pitcher: {{pitcher.name}}</legend>
+		<legend>
+			{{pitcher.name}}
+			<div class="pull-right">
+				<a href="" ng-click="choosePitcher(pitcher)" class="btn btn-small btn-success"><i class="fa fa-line-chart"></i></a>
+				<a href="/pitcher/edit/{{pitcher._id}}" class="btn btn-small btn-primary"><i class="fa fa-pencil"></i></a>
+			</div>
+		</legend>
 		<ul class="list-group">
 			<li class="list-group-item">Database ID: {{pitcher._id}}</li>
 			<li class="list-group-item">Unique ID: {{pitcher.unique_id}}</li>
