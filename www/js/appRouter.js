@@ -1,7 +1,7 @@
 (function(gScope){
 //provides the routing for the different pages of the app.
 
-var app=angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','starter.services']);
+var app = angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','starter.services']);
 
 app.config(['$routeProvider', '$logProvider', '$locationProvider', 
 function($routeProvider, $logProvider,$locationProvider){
@@ -62,22 +62,19 @@ function($routeProvider, $logProvider,$locationProvider){
 }]);
 
 app.run(function(AccountService,$location,$rootScope){
-debugger;
+
   $rootScope.$on('$routeChangeStart', function (event) {
 
-      var currPath = $location.path();
-debugger;
-  if(currPath != '/login'){
-debugger;
+    var currPath = $location.path();
+
     AccountService
     .currentUser()
     .then(function(user) {
       event.preventDefault();
-      if(!user)
+      if(!user && currPath != '/login')
         $location.path('/login');
       window.localStorage['user'] = user;
-    })
-  }
+    });
 
   });
 

@@ -1,39 +1,26 @@
 (function(gScope){
 
-angular
-.module(gScope.AppNameId)
-<<<<<<< HEAD
-.controller('accountController', ['$scope','$rootScope','$log','$location', init]);
+angular.module(gScope.AppNameId)
+.controller('accountController', ['$scope','$rootScope','$log','$location','AccountService', init]);
 
+  function init($scope,$rootScope,$log,$location,AccountService){
 
-function init($scope,$rootScope,$log,$location){
+    var errorHandler = function(options) {
+      // var errorAlert = $ionicPopup.alert({
+      //   title: options.title,
+      //   okType : 'button-assertive',
+      //   okText : "Try Again"
+      // });
+    }
 
-debugger;
+    var vm = this;
 
-  // var errorHandler = function(options) {
-  //   // var errorAlert = $ionicPopup.alert({
-  //   //   title: options.title,
-  //   //   okType : 'button-assertive',
-  //   //   okText : "Try Again"
-  //   // });
-  // }
+    vm.rememberMe = {}; // from the Remember Me button on login page
 
-  // var vm = this;
+    vm.user = {};
 
-  // vm.login = function() {
-  //   // $ionicLoading.show();
-  //   Stamplay.User.login(vm.user)
-  //   .then(function(user) {
-  //     window.localStorage['user'] = JSON.stringify(user);
-  //     $location.path('/');
-  //   }, function(error) {
-  //     // $ionicLoading.hide();
-  //     errorHandler({
-  //       title : "<h4 class='center-align'>Incorrect Username or Password</h4>"
-  //     })
-  //   })
-  // }
+    vm.login = AccountService.login;
 
-}
+  }
 
 })(this);

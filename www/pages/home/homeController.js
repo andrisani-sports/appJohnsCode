@@ -1,10 +1,9 @@
 (function(gScope){
 	
 angular.module(gScope.AppNameId)
-	.controller('homeController', ['$scope','$log', 'chartService', 'bluetoothService', init]);
+.controller('homeController', ['$scope','$log', 'chartService', 'bluetoothService','AccountService', init]);
 
-
-function init($scope,$log,chartService,bluetoothService){
+function init($scope,$log,chartService,bluetoothService,AccountService){
 
 	console.log(bluetoothService);
 	$scope.connected = false;
