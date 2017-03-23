@@ -39,6 +39,21 @@ function($routeProvider, $logProvider,$locationProvider){
         conterollerAs: 'splash',
         // resolve: checkUserStatus
     })
+    .when('/pitchers', {
+        templateUrl:'pages/pitchers/listPitchers.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
+    .when('/add-pitcher', {
+        templateUrl:'pages/pitchers/addPitcher.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
+    .when('/pitcher/:id', {
+        templateUrl:'pages/pitchers/viewPitcher.html',
+        controller: 'pitchersController',
+        conterollerAs: 'pitchers',
+    })
   	.otherwise({redirectTo: '/'});
 
     // use the HTML5 History API

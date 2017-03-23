@@ -2,6 +2,7 @@
 
 angular
 .module(gScope.AppNameId)
+<<<<<<< HEAD
 .controller('accountController', ['$scope','$rootScope','$log','$location', init]);
 
 
