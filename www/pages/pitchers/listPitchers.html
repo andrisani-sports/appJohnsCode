@@ -4,16 +4,16 @@
 		<ul class="list-group">
 		  <li class="list-group-item" ng-repeat="p in pitchers">
 		  	<div class="btn-group pull-right">
-				  <a ui-turn-on="myDropdown" class="btn" style="padding-top: 0;">
+				  <a ui-turn-on="myDropdown{{p._id}}" class="btn" style="padding-top: 0;">
 				    <i class="fa fa-ellipsis-v"></i>
 				  </a>
 				  <ul class="dropdown-menu"
-				    ui-outer-click="Ui.turnOff('myDropdown')"
-				    ui-outer-click-if="Ui.active('myDropdown')"
+				    ui-outer-click="Ui.turnOff('myDropdown' + p._id)"
+				    ui-outer-click-if="Ui.active('myDropdown' + p._id)"
 				    role="menu"
-				    ui-show="myDropdown" 
-				    ui-state="myDropdown"
-				    ui-turn-off="myDropdown">
+				    ui-show="myDropdown{{p._id}}" 
+				    ui-state="myDropdown{{p._id}}"
+				    ui-turn-off="myDropdown{{p._id}}">
 
 				    <li><a href="/pitcher/{{p._id}}">Pitcher Profile</a></li>
 				    <li><a href="/pitcher/edit/{{p._id}}">Edit Pitcher</a></li>
@@ -21,7 +21,7 @@
 				  </ul>
 				</div>
 		  	{{p.name}}
-		  </li>
-		</ul>
+		  </li><!-- /.list-group-item -->
+		</ul><!-- /.list-group -->
 	</div><!-- /.scrollable-content -->
 </div><!-- /.scrollable -->

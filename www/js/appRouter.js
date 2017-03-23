@@ -66,27 +66,27 @@ function($routeProvider, $logProvider,$locationProvider){
 
 }]);
 
-app.run(function(AccountService,$location,$rootScope){
-debugger;
-  $rootScope.$on('$routeChangeStart', function (event) {
+// app.run(function(AccountService,$location,$rootScope){
+// debugger;
+//   $rootScope.$on('$routeChangeStart', function (event) {
 
-      var currPath = $location.path();
-debugger;
-  if(currPath != '/login'){
-debugger;
-    AccountService
-    .currentUser()
-    .then(function(user) {
-      event.preventDefault();
-      if(!user)
-        $location.path('/login');
-      window.localStorage['user'] = user;
-    })
-  }
+//       var currPath = $location.path();
+// debugger;
+//   if(currPath != '/login'){
+// debugger;
+//     AccountService
+//     .currentUser()
+//     .then(function(user) {
+//       event.preventDefault();
+//       if(!user)
+//         $location.path('/login');
+//       window.localStorage['user'] = user;
+//     })
+//   }
 
-  });
+//   });
 
-});
+// });
 
 
 })(this);

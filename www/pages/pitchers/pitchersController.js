@@ -22,6 +22,13 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 
 	}
 
+	// create pitcher
+	$scope.createPitcher = function(pitcher) {
+		PitcherService.createPitcher(pitcher).then(function(result){
+			$location.path('/');	
+		});
+	}
+
 	// update pitcher
 	$scope.updatePitcher = function(pitcher) {
 		PitcherService.updatePitcher(pitcher).then(function(result){
