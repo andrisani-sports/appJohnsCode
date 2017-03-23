@@ -31,6 +31,18 @@ angular.module('starter.services', [])
 
   return {
 
+    createPitcher : function(data) {
+      var def = $q.defer();
+
+      Stamplay.Object('pitchers').save(data)
+      .then(function(response) {
+        def.resolve(response);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    },
+
     getPitchers : function(query) {
       var def = $q.defer();
 
@@ -54,7 +66,28 @@ angular.module('starter.services', [])
         def.reject(err);
       })
       return def.promise;
+    },
+
+    updatePitcher : function(pitcher) {
+      var def = $q.defer();
+
+      var data = {
+        name: pitcher.name,
+        age: pitcher.age,
+        height : pitcher.height,
+        weight : pitcher.weight,
+        stride_length : pitcher.stride_length,
+        device_height : pitcher.device_height
     }
+
+      Stamplay.Object('pitchers').update(pitcher._id, data)
+      .then(function(response) {
+        def.resolve(response);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    }    
   
   }
 }])
