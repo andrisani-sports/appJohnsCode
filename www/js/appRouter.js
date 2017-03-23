@@ -3,31 +3,41 @@
 
 var app=angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','starter.services']);
 
-app.config(['$routeProvider', '$logProvider', '$locationProvider', function($routeProvider, $logProvider,$locationProvider){
+app.config(['$routeProvider', '$logProvider', '$locationProvider', 
+function($routeProvider, $logProvider,$locationProvider){
   
-	$logProvider.debugEnabled(true);
- 
-	$routeProvider
-    .when('/login', {
-      templateUrl: 'pages/login/loginTemplate.html',
-      controller: 'accountController',
-      controllerAs: 'account',
-    })
+// 	function checkUserStatus($state, AccountService){
+// debugger;
+//       if(!AccountService.isLoggedIn()){
+//          $state.go('login');
+//       }
+//   }
 
+  $logProvider.debugEnabled(true);
+
+	$routeProvider
   	.when('/', {
   			templateUrl: 'pages/home/home.html',
   			controller: 'homeController',
-  			controllerAs: 'home',
+  			controllerAs: 'home'
+        // resolve: checkUserStatus
   	})
+    .when('/login', {
+      templateUrl: 'pages/login/loginTemplate.html',
+      controller: 'accountController',
+      controllerAs: 'account'
+    })
     .when('/pull', {
         templateUrl: 'pages/pull/pull.html',
         controller: 'pullController',
-        controllerAs: 'pull',
+        controllerAs: 'pull'
+        // resolve: checkUserStatus
     })
     .when('/splash', {
         templateUrl:'pages/splash/splash.html',
         controller: 'splashController',
         conterollerAs: 'splash',
+        // resolve: checkUserStatus
     })
     .when('/pitchers', {
         templateUrl:'pages/pitchers/listPitchers.html',
@@ -56,11 +66,26 @@ app.config(['$routeProvider', '$logProvider', '$locationProvider', function($rou
 
 }]);
 
-app.run(function(AccountService){
-  AccountService.currentUser()
+app.run(function(AccountService,$location,$rootScope){
+debugger;
+  $rootScope.$on('$routeChangeStart', function (event) {
+
+      var currPath = $location.path();
+debugger;
+  if(currPath != '/login'){
+debugger;
+    AccountService
+    .currentUser()
     .then(function(user) {
+      event.preventDefault();
+      if(!user)
+        $location.path('/login');
       window.localStorage['user'] = user;
     })
+  }
+
+  });
+
 });
 
 
