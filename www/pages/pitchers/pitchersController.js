@@ -3,7 +3,6 @@
 angular.module(gScope.AppNameId)
 	.controller('pitchersController', ['$scope', '$rootScope', '$log', '$location', '$routeParams', 'chartService', 'bluetoothService', 'PitcherService', init]);
 
-
 function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoothService,PitcherService){
 
 	PitcherService.getPitchers().then(function(result){

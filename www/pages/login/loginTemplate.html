@@ -1,13 +1,13 @@
 <div class="scrollable">
  <div class="scrollable-content section">
    
-  <form role="form" ng-submit='login()'>
+  <form role="form" ng-submit='account.login(account.user)'>
     <fieldset>
       <legend>Login</legend>
         <div class="form-group has-feedback">
           <label>Email</label>
           <input type="email"
-                 ng-model="email"
+                 ng-model="account.user.email"
                  class="form-control"
                  placeholder="Enter email"
                  required>
@@ -15,16 +15,20 @@
 
         <div class="form-group has-feedback">
           <label>Password</label>
-          <input type="password" 
-                 class="form-control"
-                 placeholder="Password"
-                 required>
+
+          <input 
+            type="password" 
+            ng-model="account.user.password"
+            class="form-control"
+            placeholder="Password"
+            required>
+
         </div>
 
         <div class="form-group">
           <label>Remember Me</label>
           <ui-switch 
-            ng-model="rememberMe"></ui-switch>
+            ng-model="account.rememberMe"></ui-switch>
         </div>
     </fieldset>
     <hr>
