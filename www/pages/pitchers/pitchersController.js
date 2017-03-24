@@ -38,7 +38,10 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 	// choose pitcher to run test
 	$scope.choosePitcher = function(pitcher){
 		$rootScope.chosenPitcher = pitcher;
+		$rootScope.currLastPull = PitcherService.getMostRecentPullValue(pitcher);
+		$rootScope.currBaseline = PitcherService.getCurrBaseline(pitcher);
 		$location.path('/home');
+		// sidebar is closed by the ui-turn-off='uiSidebarRight' attrib in right_sidebar.html
 	}
 
 }

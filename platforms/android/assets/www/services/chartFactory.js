@@ -63,6 +63,7 @@ function init($rootScope, $log){
 		return Object.keys(charts);
 	}
 
+//sample of getting data from a click
 	function onPointClick(mouseEvent){
 	    var object = this;
 	    var dataString = this.getAttribute('ct:value').split(',');

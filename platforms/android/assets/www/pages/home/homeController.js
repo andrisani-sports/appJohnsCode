@@ -1,57 +1,61 @@
 (function(gScope){
 	
 angular.module(gScope.AppNameId)
-	.controller('homeController', ['$scope','$log', 'chartService', 'bluetoothService', init]);
+.controller('homeController', ['$scope','$log', 'chartService', 'bluetoothService','AccountService','SharedState','$location', init]);
 
+function init($scope,$log,chartService,bluetoothService,AccountService,SharedState,$location){
 
-function init($scope,$log,chartService,bluetoothService){
-	var DATA_PLOT_LIMIT = 50;
-	var startTime;
-	var targetChart = '#ct-chart';
+	$scope.showModal = false;
 
-	chartService.makeChart(targetChart,null);
 	console.log(bluetoothService);
+
 	$scope.connected = false;
 	$scope.connecting = false;
 	$scope.connect = connect;
-	$scope.disconnect = disconnect;
+	// $scope.disconnect = disconnect;
 
-	$scope.streaming = false;
-	$scope.start = start;
-	$scope.stop = stop;
-
-	$scope.data = [];
+	// $scope.streaming = false;
+	// $scope.start = start;
+	// $scope.stop = stop;
 
 	function connect(){
+		if($scope.chosenPitcher.name == ''){
+			// need to choose a pitcher first
+			SharedState.turnOn('choosePitcher');
+			return false;
+		}
 		$scope.connecting = true;
-		bluetoothService.connect().then(function(data){
+		bluetoothService.connect().then(
+			function(data){
 				console.log(data);
 				$scope.connected = true;
 				$scope.connecting = false;
 				bluetoothService.subscribe(dataHandler);
-		}, function(err){
-				console.log(err);
+				$location.path('/pull');
+			}, function(err){
+				console.log('ERROR CONNECTING BLUETOOTH: ',err);
 				$scope.connected = false;
 				$scope.connecting = false;
-		});		
+			}
+		);		
 	}
 
-	function disconnect(){
-		$scope.connecting = false;
-		$scope.connected = false;
-		bluetoothService.disconnect();
-	}
+	// function disconnect(){
+	// 	$scope.connecting = false;
+	// 	$scope.connected = false;
+	// 	bluetoothService.disconnect();
+	// }
 
-	function start(){
-		$scope.streaming = true;
-		startTime = new Date().getTime() / 1000;
-		bluetoothService.start(100);
-	}
+	// function start(){
+	// 	$scope.streaming = true;
+	// 	startTime = new Date().getTime() / 1000;
+	// 	bluetoothService.start(100);
+	// }
 
-	function stop(){
-		$scope.streaming = false;
-		bluetoothService.stop();
-	}
+	// function stop(){
+	// 	$scope.streaming = false;
+	// 	bluetoothService.stop();
+	// }
 
 	function dataHandler(dataPoint){
 		var r = {};

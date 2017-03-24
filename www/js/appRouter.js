@@ -27,12 +27,6 @@ function($routeProvider, $logProvider,$locationProvider){
       controller: 'accountController',
       controllerAs: 'account'
     })
-    .when('/pull', {
-        templateUrl: 'pages/pull/pull.html',
-        controller: 'pullController',
-        controllerAs: 'pull'
-        // resolve: checkUserStatus
-    })
     .when('/splash', {
         templateUrl:'pages/splash/splash.html',
         controller: 'splashController',

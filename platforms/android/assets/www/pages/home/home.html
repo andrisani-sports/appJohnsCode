@@ -1,8 +1,37 @@
-<div>Home Page</div>
-<div style="width:100%;" id="ct-chart" class="ct-perfect-fourth"></div>
+<div class="scrollable">
+	<div class="scrollable-content">
 
-<div ng-if="!connected" style="width:30%;background-color:orange;text-align:center;" ng-click="connect()">connect</div>
-<div ng-if="connected" style="width:30%;background-color:orange;text-align:center;" ng-click="disconnect()">disconnect</div>
-<div ng-if="connecting"> CONNECTING </div>
-<div ng-if="connected && streaming" style="position:absolute;bottom:10px;left:10px;right:10px;background-color:red;height:10%;text-align:center;" ng-click="stop()">Stop</div>
-<div ng-if="connected && !streaming" style="position:absolute;bottom:10px;left:10px;right:10px;background-color:green;height:10%;text-align:center" ng-click="start()">Start</div>
+	    <div class="section">
+			<h3>Home Page</h3>
+		</div>
+
+		<div class="section">
+			<h5>Current Pitcher: <b>{{ chosenPitcher.name != '' ? chosenPitcher.name : 'Click on Pitchers to choose a pitcher' }}</b></h5>
+		</div>
+
+		<div class="section" style="text-align:center;">
+			<button ng-click="connect()" class="btn btn-success btn-block" style="margin: 0 auto;">START</button>
+		</div>
+
+	</div>
+</div>
+
+<div ui-content-for="modals">
+  <div class="modal" ui-if="choosePitcher" ui-shared-state='choosePitcher'>
+    <div class="modal-backdrop in"></div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" ui-turn-off="choosePitcher">&times;</button>
+          <h4 class="modal-title">Wait A Second</h4>
+        </div>
+        <div class="modal-body">
+          <p>Please choose a pitcher before starting.</p>
+        </div>
+        <div class="modal-footer">
+          <button ui-turn-off="choosePitcher" class="btn btn-default">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

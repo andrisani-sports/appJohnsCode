@@ -6,27 +6,38 @@
 
 
 function initialize($log, $rootScope){
-	  	document.addEventListener("resume", onResume, false);
-  		document.addEventListener("pause", onPause, false);
-  		document.addEventListener("online", onOnline, false);
 
-  		var RESUME = 'CORDOVA_RESUME';
-  		var PAUSE = 'CORDOVA_PAUSE';
-  		var ONLINE = 'CORDOVA_ONLINE';
-  		var ready = window.cordova !== undefined;
+  	document.addEventListener("resume", onResume, false);
+		document.addEventListener("pause", onPause, false);
 
-  		var service = {};
-  		service.ready = ready;
-  		service.RESUME = RESUME;
-  		service.PAUSE = PAUSE;
-  		if(ready) {
+    // rebroadcast into angular:
+    function backKeyDown(e){
+      e.preventDefault();
+      console.log('broadcasting back');
+      $rootScope.$broadcast('backButton');
+    }
+
+		var RESUME  = 'CORDOVA_RESUME';
+		var PAUSE   = 'CORDOVA_PAUSE';
+		var ONLINE  = 'CORDOVA_ONLINE';
+		var ready   = window.cordova !== undefined;
+
+		var service = {};
+		service.ready = ready;
+		service.RESUME = RESUME;
+		service.PAUSE = PAUSE;
+		if(ready) { // RUNNING ON MOBILE DEVICE
  			service.platform = device.platform;
- 		}
+      document.addEventListener("backbutton", backKeyDown, false);
+ 		}else{ // RUNNING ON SOMETHING ELSE (PROBABLY BROWSER)
+      window.addEventListener('popstate', backKeyDown, false);
+    }
 
-  		if(ready) $log.debug('Cordova Ready');
-  		else $log.debug('Cordova not Ready');
+		if(ready) $log.debug('Cordova Ready');
+		else $log.debug('Cordova not Ready');
 
-  		return service;
+		return service;
+
 		function onResume(){
 			$log.debug('resuming the app');
 			$rootScope.$broadcast(RESUME);
@@ -35,10 +46,7 @@ function initialize($log, $rootScope){
 			$log.debug('pausing the app');
 			$rootScope.$broadcast(PAUSE);
 		}
-		function onOnline(){
-			$log.debug('Network Detected by Cordova');
-			$rootScope.$broadcast(ONLINE);
-		}
+
 }
 
 })(this);

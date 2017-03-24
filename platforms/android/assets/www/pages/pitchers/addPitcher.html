@@ -1,0 +1,48 @@
+<div class="scrollable">
+ <div class="scrollable-content section">
+   
+  <form role="form" ng-submit="createPitcher(pitcher)">
+    <fieldset>
+      <legend>Add Pitcher</legend>
+      
+      <div class="form-group has-feedback">
+        <label>Pitcher Name</label>
+        <input type="text" ng-model="pitcher.name" class="form-control" placeholder="First & Last Name" required>
+      </div>
+
+      <div class="form-group has-feedback">
+        <label>Age</label>
+        <input type="text" ng-model="pitcher.age" class="form-control" placeholder="Age" required>
+      </div>
+
+      <div class="form-group has-feedback">
+        <label>Height (inches)</label>
+        <input type="text" ng-model="pitcher.height" class="form-control" placeholder="Height" required>
+      </div>
+
+      <div class="form-group has-feedback">
+        <label>Weight (lbs)</label>
+        <input type="text" ng-model="pitcher.weight" class="form-control" placeholder="Weight" required>
+      </div>
+
+      <div class="form-group has-feedback">
+        <label>Stride Length (inches)</label>
+        <input type="text" ng-model="pitcher.stride_length" class="form-control" placeholder="Stride Length" required>
+      </div>
+
+      <div class="form-group has-feedback">
+        <label>Device Height (inches)</label>
+        <input type="text" ng-model="pitcher.device_height" class="form-control" placeholder="Device Height" required>
+      </div>
+      
+      <!-- Set this equal to the team id associated with the logged in user 
+      <input type="hidden" ng-model="team" class="form-control" value="">
+      -->
+
+    </fieldset>
+    <hr>
+    <button class="btn btn-primary btn-block">Create</button>
+
+  </form>
+ </div><!-- /.scrollable-content -->
+</div><!-- /.scrollable -->

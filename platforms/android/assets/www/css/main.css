@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+
+/*----------------------------------------------------------------------
+ MAIN 
+ ---------------------------------------------------------------------*/
+body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1.4; color: #666666; background: #ffffff; font-weight: 400; }
+
+/* main background color for entire app */
+#app_root { background: #95abbe; }
+
+/* main scrollable bkgd color */
+.scrollable-content{ background-color: #ffffff; }
+
+/*----------------------------------------------------------------------
+ NAVBAR
+ ---------------------------------------------------------------------*/
+.navbar * { background-color: #505b66; color: #ffffff; }
+.navbar-brand { font-family: 'Lobster', cursive; font-size: 20px; }
+.navbar-app .btn, .navbar-app .btn-navbar { color: #ffffff; opacity: 1 !important; }
+.list-group-item.active, .list-group-item.active:focus { background-color: #95abbe; border-color: #8699ab; }
+
+/* sidebar nav */
+h1.scrollable-header.app-name { font-family: 'Lobster', cursive; }
+h1.scrollable-header.app-name small { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #a7adb2; }
+.sidebar-left, .sidebar-right { background: #505b66; }
+a.list-group-item, button.list-group-item, .list-group-item a { color: #505b66; }
+
+/*----------------------------------------------------------------------
+ SPLASH
+ ---------------------------------------------------------------------*/
+#splash-content { position: absolute; top: 50%; left: 50%; margin-top: -100px; margin-left: -115px; text-align: center; width: 230px; height: 200px; }
+#splash-content h1 { font-family: 'Lobster', cursive; font-size: 32px; color: #ffffff; }
+#splash-content h1 sup { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #778898; font-size: 12px; line-height: 1; }
+img.splash { border: 6px solid #ffffff; border-radius: 60px; }
+
+/*----------------------------------------------------------------------
+ FORMS
+ ---------------------------------------------------------------------*/
+legend { font-family: 'Lobster', cursive; color: #7a848e; font-size: 28px; }
+
+/* switch */
+.switch.active { background-color: #95abbe; border: 1px solid #8699ab; }
+.switch.active .switch-handle { border-color: #8699ab; }
+
+/* inputs */
+textarea { max-width: 100%; }
+.ng-dirty input.ng-invalid, input.ng-invalid, textarea.ng-invalid { border-color: #ff6259; }
+
+/* buttons */
+.btn { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+.btn-small { padding: 3px 6px; }
+.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
+.btn-success { background: #3cad50; border-color: #359746; }
+.btn-success.active, .btn-success:active, .open>.dropdown-toggle.btn-success { color: #ffffff; background-color: #3cad50; border-color: #359746; }
+.btn-default { border-color: #8699ab; }
+
+/*----------------------------------------------------------------------
+ MODALS
+ ---------------------------------------------------------------------*/
+ h4.modal-title { font-family: 'Lobster', cursive; color: #7a848e; font-size: 24px; }
+
+/*----------------------------------------------------------------------
+ EMBEDS
+ ---------------------------------------------------------------------*/
+ .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; }
+ .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }

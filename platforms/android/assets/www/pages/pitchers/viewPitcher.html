@@ -1,0 +1,21 @@
+<div class="scrollable">
+ <div class="scrollable-content section">
+		<legend>
+			{{pitcher.name}}
+			<div class="pull-right">
+				<a href="" ng-click="choosePitcher(pitcher)" class="btn btn-small btn-success"><i class="fa fa-line-chart"></i></a>
+				<a href="/pitcher/edit/{{pitcher._id}}" class="btn btn-small btn-primary"><i class="fa fa-pencil"></i></a>
+			</div>
+		</legend>
+		<ul class="list-group">
+			<li class="list-group-item">Database ID: {{pitcher._id}}</li>
+			<li class="list-group-item">Unique ID: {{pitcher.unique_id}}</li>
+			<li class="list-group-item">Pitcher Name: {{pitcher.name}}</li>
+			<li class="list-group-item">Age: {{pitcher.age}}</li>
+			<li class="list-group-item">Height: {{pitcher.height}} inches</li>
+			<li class="list-group-item">Weight: {{pitcher.weight}} lbs</li>
+			<li class="list-group-item">Stride Length: {{pitcher.stride_length}} inches</li>
+			<li class="list-group-item">Device Height: {{pitcher.device_height}} inches</li>
+		</ul><!-- /.list-group -->
+ </div><!-- /.scrollable-content -->
+</div><!-- /.scrollable -->

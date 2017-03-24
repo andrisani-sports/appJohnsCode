@@ -22,19 +22,19 @@ function init($scope,$log,chartService,bluetoothService){
 
 	$scope.data = [];
 
-	function connect(){
-		$scope.connecting = true;
-		bluetoothService.connect().then(function(data){
-				console.log(data);
-				$scope.connected = true;
-				$scope.connecting = false;
-				bluetoothService.subscribe(dataHandler);
-		}, function(err){
-				console.log(err);
-				$scope.connected = false;
-				$scope.connecting = false;
-		});		
-	}
+	// function connect(){
+	// 	$scope.connecting = true;
+	// 	bluetoothService.connect().then(function(data){
+	// 			console.log(data);
+	// 			$scope.connected = true;
+	// 			$scope.connecting = false;
+	// 			bluetoothService.subscribe(dataHandler);
+	// 	}, function(err){
+	// 			console.log(err);
+	// 			$scope.connected = false;
+	// 			$scope.connecting = false;
+	// 	});		
+	// }
 
 	function disconnect(){
 		$scope.connecting = false;
@@ -53,19 +53,19 @@ function init($scope,$log,chartService,bluetoothService){
 		bluetoothService.stop();
 	}
 
-	function dataHandler(dataPoint){
-		var r = {};
-        r.x = new Date().getTime() / 1000 - startTime;
-        r.y = dataPoint.volt;
-        $scope.data.push(r);
-        plot();
-	}
+	// function dataHandler(dataPoint){
+	// 	var r = {};
+ //        r.x = new Date().getTime() / 1000 - startTime;
+ //        r.y = dataPoint.volt;
+ //        $scope.data.push(r);
+ //        plot();
+	// }
 
-	function plot(){
-		 if($scope.data.length > DATA_PLOT_LIMIT){
-            chartService.setData(targetChart, $scope.data.slice($scope.data.length-DATA_PLOT_LIMIT,$scope.data.length));
-        } else chartService.setData(targetChart, $scope.data);
-	}
+	// function plot(){
+	// 	 if($scope.data.length > DATA_PLOT_LIMIT){
+ //            chartService.setData(targetChart, $scope.data.slice($scope.data.length-DATA_PLOT_LIMIT,$scope.data.length));
+ //        } else chartService.setData(targetChart, $scope.data);
+	// }
 
 }
 

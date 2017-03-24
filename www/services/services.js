@@ -60,6 +60,29 @@ angular.module('starter.services', [])
 
   return {
 
+    getMostRecentPullValue: function(pitcher){
+      var id = pitcher.id;
+      return Stamplay.Object('pitchers')
+      .get({})
+      .then(function(result){
+        var value;
+        value = result.data[0];
+        return value;
+      });
+    },
+
+    getCurrBaseline: function(pitcher){
+      var baseLine;
+
+      // assume that most recent baseline will be at [0]
+      if(pitcher.baselines && pitcher.baselines.length > 0)
+        baseLine = pitcher.baselines[0].value;
+      else
+        baseLine = 0;
+
+      return baseLine;
+    },
+
     createPitcher : function(pitcher) {
       var def = $q.defer();
 
@@ -173,7 +196,8 @@ angular.module('starter.services', [])
         def.resolve(response);
       }, function(err) {
         def.reject(err);
-      })
+      });
+
       return def.promise;
     }
   }

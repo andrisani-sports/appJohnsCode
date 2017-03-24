@@ -5,9 +5,11 @@ angular.module(gScope.AppNameId)
 
 
 function init($rootScope, $log, $q){
+	
 	var service = {};
 
 	//constants for the device
+	
 	var analogPorts = [0,1,2,3,4,5];
 	var Unipolar = 1;
 	var Bipolar = 0;
@@ -30,11 +32,11 @@ function init($rootScope, $log, $q){
 	service.start = start;
 	service.stop = stop;
 
-
-
 	return service;
 
+
 	//Service Functions
+
 	function connect(){
 		var deferred = $q.defer();
 		bluetoothSerial.connect(MAC_ADDRESS, 
@@ -51,7 +53,6 @@ function init($rootScope, $log, $q){
 
 		return deferred.promise;
 	}
-
 
 	function disconnect(){
 		stop();
