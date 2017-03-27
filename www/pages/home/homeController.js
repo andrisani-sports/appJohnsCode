@@ -30,7 +30,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	var startTime;
 	var targetChart = '#ct-chart';
 
-	chartService.makeChart(targetChart,null);
+	// chartService.makeChart(targetChart,null);
 
 	/**
 	 * BLUETOOTH VALUES

@@ -1,0 +1,23 @@
+<div class="modal" ui-if="doingPullModal" ui-shared-state='doingPullModal'>
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" ui-turn-off="doingPullModal">&times;</button>
+        <h4 class="modal-title">Wait A Second</h4>
+      </div>
+      <div class="modal-body">
+        
+        <h5>BASELINE: {{currBaseline}}</h5>
+        
+        <div style="width:100%;" id="ct-chart" class="ct-perfect-fourth"></div>
+
+        <button class="btn btn-primary" ng-click="stopPull()">STOP</button>
+
+      </div>
+      <div class="modal-footer">
+        <button ui-turn-off="doingPullModal" class="btn btn-default">Close</button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-body -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
