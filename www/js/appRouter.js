@@ -72,7 +72,6 @@ app.run(function(AccountService,$location,$rootScope){
       event.preventDefault();
       if(!user && currPath != '/login')
         $location.path('/login');
-      window.localStorage['user'] = user;
     });
 
   });
