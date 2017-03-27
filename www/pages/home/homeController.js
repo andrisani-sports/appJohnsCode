@@ -36,7 +36,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	 * BLUETOOTH VALUES
 	 */
 
-	console.log(bluetoothService);
+	console.log('bluetoothService?', bluetoothService);
 
 	$scope.connected = false;
 	$scope.connecting = false;

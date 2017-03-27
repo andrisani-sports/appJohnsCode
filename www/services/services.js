@@ -40,6 +40,8 @@ angular.module('starter.services', [])
       Stamplay.User.login(user)
       .then(function(user) {
         window.localStorage['user'] = JSON.stringify(user);
+        console.log('stringify', JSON.stringify(user));
+        console.log('user', user);
         $rootScope.$apply(function(){
           $location.path('/');
         });
