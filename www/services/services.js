@@ -87,11 +87,24 @@ angular.module('starter.services', [])
 
     createPitcher : function(pitcher) {
       var def = $q.defer();
+      
+      // Get team from logged user and set that ID to pitcher.team
       var userTeam = window.localStorage.getItem('userTeam');
       var pitcherTeam = [];
       pitcherTeam.push(userTeam);
 
+      // Generate a unique ID for each pitcher
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+      }
+      function guid() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+      }
+      
+      var uuid = guid();
+
       var data = {
+        unique_id: uuid,
         name: pitcher.name,
         age: pitcher.age,
         height : pitcher.height,
@@ -104,28 +117,7 @@ angular.module('starter.services', [])
       Stamplay.Object('pitchers').save(data)
       .then(function(response) {
 
-        function s4() {
-          return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-        }
-        function guid() {
-          return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-        }
-        
-        var uuid = guid();
-        var pitcherID = response._id;
-
-        var updateData = {
-          unique_id: uuid
-        }
-        
-        Stamplay.Object('pitchers').update(pitcherID, updateData)
-        .then(function(response) {
-          def.resolve(response);
-        }, function(err) {
-          def.reject(err);
-        })
-        return def.promise;
-        
+        console.log('New pitcher created', response);
 
         def.resolve(response);
       }, function(err) {
