@@ -40,8 +40,8 @@ angular.module('starter.services', [])
       Stamplay.User.login(user)
       .then(function(user) {
         window.localStorage['user'] = JSON.stringify(user);
-        console.log('stringify', JSON.stringify(user));
-        console.log('user', user);
+        window.localStorage['userTeam'] = user.team;
+        console.log('userTeam', user.team);
         $rootScope.$apply(function(){
           $location.path('/');
         });
@@ -87,6 +87,9 @@ angular.module('starter.services', [])
 
     createPitcher : function(pitcher) {
       var def = $q.defer();
+      var userTeam = window.localStorage.getItem('userTeam');
+      var pitcherTeam = [];
+      pitcherTeam.push(userTeam);
 
       var data = {
         name: pitcher.name,
@@ -95,7 +98,7 @@ angular.module('starter.services', [])
         weight : pitcher.weight,
         stride_length : pitcher.stride_length,
         device_height : pitcher.device_height,
-        // team: pitcher.team
+        team: pitcherTeam
       }
 
       Stamplay.Object('pitchers').save(data)
@@ -110,6 +113,7 @@ angular.module('starter.services', [])
         
         var uuid = guid();
         var pitcherID = response._id;
+
         var updateData = {
           unique_id: uuid
         }
