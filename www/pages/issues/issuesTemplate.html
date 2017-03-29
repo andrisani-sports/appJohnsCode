@@ -3,7 +3,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button class="close" ui-turn-off="modal2">&times;</button>
+        <button class="close" ui-turn-off="modal2" style="font-size:24px !important;"><i class="fa fa-close"></i></button>
         <h4 class="modal-title">How Can We Help?</h4>
       </div><!-- /.modal-header -->
       <div class="modal-body">
@@ -34,7 +34,8 @@
           </fieldset>
           <hr>
 
-          <button class="btn btn-primary btn-block">Send</button>
+          <button class="btn btn-primary" style="display:inline-block; width:40%;">Send</button>
+          <button ui-turn-off="modal2" class="btn btn-default" style="display:inline-block; width:40%;">Close</button>
 
           <!-- <div ui-content-for="navbarAction">
             <a class="btn" ng-click="sendIssue()">Login</a>

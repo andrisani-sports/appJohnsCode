@@ -5,13 +5,6 @@ var app = angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','start
 
 app.config(['$routeProvider', '$logProvider', '$locationProvider', 
 function($routeProvider, $logProvider,$locationProvider){
-  
-// 	function checkUserStatus($state, AccountService){
-// debugger;
-//       if(!AccountService.isLoggedIn()){
-//          $state.go('login');
-//       }
-//   }
 
   var path = ''; // android_asset/www/
 
@@ -20,7 +13,7 @@ function($routeProvider, $logProvider,$locationProvider){
   $locationProvider.hashPrefix('');
 
 	$routeProvider
-  	.when('/', {
+  	.when('/home', {
   			templateUrl: path + 'pages/home/home.html',
   			controller: 'homeController',
   			controllerAs: 'home'
@@ -57,7 +50,7 @@ function($routeProvider, $logProvider,$locationProvider){
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
-  	.otherwise({redirectTo: '/'});
+  	.otherwise({redirectTo: '/splash'});
 
     // use the HTML5 History API
     // $locationProvider.html5Mode({

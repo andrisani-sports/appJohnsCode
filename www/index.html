@@ -6,7 +6,6 @@
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
         
-        <!-- <base href="/android_asset/www/" /> -->
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
@@ -25,6 +24,8 @@
         <!-- Defining the name which will be used by the Angular App in all the JS files -->
         <script type="text/javascript">
             AppNameId = "APA";
+            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            console.log('viewport width: ' + w);
         </script>
 
         <!-- Sidebars -->
@@ -33,9 +34,9 @@
               <h1 class="scrollable-header app-name">Shoulder Saver <small>beta</small></h1>
               <div class="scrollable-content">
                 <div class="list-group" ui-turn-off="uiSidebarLeft" >
-                  <a class="list-group-item" href="#/">Home <i class="fa fa-chevron-right pull-right"></i></a>
+                  <a class="list-group-item" href="#home">Home <i class="fa fa-chevron-right pull-right"></i></a>
                   <!-- <a class="list-group-item" href="/login">Login <i class="fa fa-chevron-right pull-right"></i></a> -->
-                  <a class="list-group-item" href="#splash">Splash <i class="fa fa-chevron-right pull-right"></i></a>
+                  <!-- <a class="list-group-item" href="#splash">Splash <i class="fa fa-chevron-right pull-right"></i></a> -->
                   <a class="list-group-item" href="#pitchers">Pitcher List <i class="fa fa-chevron-right pull-right"></i></a>
 
                   <a class="list-group-item" href="#pitcher/add">Add Pitcher <i class="fa fa-chevron-right pull-right"></i></a>
@@ -54,7 +55,7 @@
 
               <h1 class="scrollable-header app-name">
                 Pitchers List 
-                <a href="/pitcher/add" class="btn btn-primary pull-right" style="margin-top: 18px;">
+                <a href="#pitcher/add" class="btn btn-primary pull-right" style="margin-top: 18px;">
                     <i class="fa fa-plus"></i>
                 </a>
               </h1>
@@ -107,35 +108,15 @@
                   <i class="fa fa-spinner fa-spin loading-spinner"></i>
                 </div>
                 
-                <div ui-content-for="modals">
-                    <!-- <div ng-include="'pages/instructions/instructionsTemplate.html'"></div> -->
-                    <div class="modal modal-overlay" ui-if='modal1' ui-shared-state='modal1'>
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button class="close" ui-turn-off="modal1">&times;</button>
-                            <h4 class="modal-title">Instructions</h4>
-                          </div><!-- /.modal-header -->
-                          <div class="modal-body">
-                            <div style="margin-bottom: 20px;">
-                              <div class='embed-container'><iframe src='http://www.youtube.com/embed/qwpRHrAh3pk?rel=0&showinfo=0&controls=0' frameborder='0' allowfullscreen></iframe></div>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, amet harum reiciendis enim adipisci magni fugit suscipit eaque corporis? Saepe eius ipsum optio dolorum a qui adipisci, reprehenderit totam temporibus!</p>
-                            <div class="modal-footer">
-                              <button ui-turn-off="modal1" class="btn btn-default">Close</button>
-                            </div><!-- /.modal-footer -->
-                          </div><!-- /.modal-body -->
-                        </div><!-- /.modal-content -->
-                      </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
-
-                    <div ng-include="'pages/issues/issuesTemplate.html'"></div>
-                    <div ng-include="pages/_shared/choosePitcherModal.html"></div>
-                    <div ng-include="pages/_shared/pullModal.html"></div>
-                </div>
-                
                 <div class="app-content">
-                    <div id="view_root" ng-view></div>
+                    <div id="view_root" ng-view>
+                        <div ui-content-for="modals">
+                            <div ng-include="'pages/instructions/instructionsTemplate.html'"></div>
+                            <div ng-include="'pages/issues/issuesTemplate.html'"></div>
+                            <div ng-include="'pages/modals/choosePitcherModal.html'"></div>
+                            <div ng-include="'pages/modals/pullModal.html'"></div>
+                        </div><!-- ui-content-for=modals -->
+                    </div><!-- #view_root -->
                 </div><!-- /.app-content -->
 
             </div><!-- /#app_root -->

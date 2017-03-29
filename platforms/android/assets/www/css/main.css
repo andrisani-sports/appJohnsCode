@@ -4,7 +4,7 @@
 /*----------------------------------------------------------------------
  MAIN 
  ---------------------------------------------------------------------*/
-body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1.4; color: #666666; background: #ffffff; font-weight: 400; }
+body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 20px; line-height: 1.4; color: #666666; background: #ffffff; font-weight: 400; }
 
 /* main background color for entire app */
 #app_root { background: #95abbe; }
@@ -12,17 +12,23 @@ body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans
 /* main scrollable bkgd color */
 .scrollable-content{ background-color: #ffffff; }
 
+.has-navbar-top .app-body{ padding-top: 71px; }
+.has-navbar-bottom .app-body{ padding-bottom: 71px; }
+
 /*----------------------------------------------------------------------
  NAVBAR
  ---------------------------------------------------------------------*/
 .navbar * { background-color: #505b66; color: #ffffff; }
-.navbar-brand { font-family: 'Lobster', cursive; font-size: 20px; font-weight: bold; font-style: italic; }
-.navbar-app .btn, .navbar-app .btn-navbar { color: #ffffff; opacity: 1 !important; }
+.navbar-app { min-height: 70px; }
+.navbar-app .btn { line-height: 70px; }
+.navbar-brand { font-family: 'Lobster', cursive; font-size: 30px; font-weight: bold; font-style: italic; line-height: 38px; height:70px; }
+.navbar-app .btn, .navbar-app .btn-navbar { color: #ffffff; opacity: 1 !important; font-size: 20px !important;}
 .list-group-item.active, .list-group-item.active:focus { background-color: #95abbe; border-color: #8699ab; }
 
 /* sidebar nav */
-h1.scrollable-header.app-name { font-family: 'Lobster', cursive; font-weight: bold; font-style: italic; }
+h1.scrollable-header.app-name { font-family: 'Lobster', cursive; font-weight: bold; font-style: italic; font-size: 26px; }
 h1.scrollable-header.app-name small { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #a7adb2; }
+.sidebar-header{font-size: 26px;}
 .sidebar-left, .sidebar-right { background: #505b66; }
 a.list-group-item, button.list-group-item, .list-group-item a { color: #505b66; }
 
@@ -37,7 +43,7 @@ img.splash { border: 6px solid #ffffff; border-radius: 60px; }
 /*----------------------------------------------------------------------
  FORMS
  ---------------------------------------------------------------------*/
-legend { font-family: 'Lobster', cursive; color: #7a848e; font-size: 28px; font-weight: bold; font-style: italic; }
+legend { padding: 10px 0; font-family: 'Lobster', cursive; color: #7a848e; font-size: 28px; font-weight: bold; font-style: italic; }
 
 /* switch */
 .switch.active { background-color: #95abbe; border: 1px solid #8699ab; }
@@ -48,18 +54,24 @@ textarea { max-width: 100%; }
 .ng-dirty input.ng-invalid, input.ng-invalid, textarea.ng-invalid { border-color: #ff6259; }
 
 /* buttons */
-.btn { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+.btn { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 20px; }
 .btn-small { padding: 3px 6px; }
 .btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
 .btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary { color: #ffffff; background-color: #95abbe; border-color: #8699ab; }
 .btn-success { background: #3cad50; border-color: #359746; }
 .btn-success.active, .btn-success:active, .open>.dropdown-toggle.btn-success { color: #ffffff; background-color: #3cad50; border-color: #359746; }
 .btn-default { border-color: #8699ab; }
+button.close { font-size: 20px; }
 
 /*----------------------------------------------------------------------
  MODALS
  ---------------------------------------------------------------------*/
- h4.modal-title { font-family: 'Lobster', cursive; color: #7a848e; font-size: 24px; font-weight: bold; font-style: italic; }
+ h4.modal-title { font-family: 'Lobster', cursive; color: #7a848e; font-size: 28px; font-weight: bold; font-style: italic; }
+ .modal-overlay { background: #ffffff;}
+/*----------------------------------------------------------------------
+ MODALS
+ ---------------------------------------------------------------------*/
+ .dropdown-menu>li>a{ padding: 5px 20px; font-size: 18px; }
 
 /*----------------------------------------------------------------------
  EMBEDS

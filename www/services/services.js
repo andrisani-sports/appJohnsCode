@@ -128,9 +128,13 @@ angular.module('starter.services', [])
 
     getPitchers : function(query) {
       var def = $q.defer();
+      var team = [];
       var teamId = window.localStorage['userTeam'];
+      team.push(teamId);
 
-      Stamplay.Object('pitchers').get({'team':teamId})
+      console.log('teamId,team in PitcherService.getPitchers',teamId,team);
+
+      Stamplay.Object('pitchers').get({'team':team})
       // .findByCurrentUser(["owner"])
       .then(function(response) {
         console.log('response in PitcherService.getPitchers',response);
