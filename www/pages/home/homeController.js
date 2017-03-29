@@ -36,7 +36,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	 * BLUETOOTH VALUES
 	 */
 
-	console.log(bluetoothService);
+	console.log('BLUETOOTH SERVICE: ',bluetoothService);
 
 	$scope.connected = false;
 	$scope.connecting = false;
@@ -106,7 +106,9 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	}
 
 	function connect(){
+console.log('connecting...');
 		if($scope.chosenPitcher.name == ''){
+console.log('no pitcher, showing modal choosePitcher...');
 			// need to choose a pitcher first
 			SharedState.turnOn('choosePitcher');
 			return false;

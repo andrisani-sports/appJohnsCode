@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('AccountService', ['$q','$rootScope','$location', function($q,$rootScope,$location) {
+.factory('AccountService', ['$q','$rootScope','$location','$timeout', function($q,$rootScope,$location,$timeout) {
   
   function currentUser() {
       var def = $q.defer();
@@ -60,6 +60,29 @@ angular.module('starter.services', [])
 
   return {
 
+    getMostRecentPullValue: function(pitcher){
+      var id = pitcher.id;
+      return Stamplay.Object('pitchers')
+      .get({})
+      .then(function(result){
+        var value;
+        value = result.data[0];
+        return value;
+      });
+    },
+
+    getCurrBaseline: function(pitcher){
+      var baseLine;
+
+      // assume that most recent baseline will be at [0]
+      if(pitcher.baselines && pitcher.baselines.length > 0)
+        baseLine = pitcher.baselines[0].value;
+      else
+        baseLine = 0;
+
+      return baseLine;
+    },
+
     createPitcher : function(pitcher) {
       var def = $q.defer();
 
@@ -107,10 +130,12 @@ angular.module('starter.services', [])
 
     getPitchers : function(query) {
       var def = $q.defer();
+      var teamId = window.localStorage['team'];
 
-      Stamplay.Object('pitchers').get({})
+      Stamplay.Object('pitchers').get({'team':teamId})
       // .findByCurrentUser(["owner"])
       .then(function(response) {
+        console.log('response in PitcherService.getPitchers',response);
         def.resolve(response.data);
       }, function(err) {
         def.reject(err);
@@ -174,7 +199,7 @@ angular.module('starter.services', [])
       }, function(err) {
         def.reject(err);
       });
-      
+
       return def.promise;
     }
   }

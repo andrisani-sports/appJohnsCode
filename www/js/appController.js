@@ -7,6 +7,10 @@
 
 		var app = this;
 
+		$scope.testBtn = function(){
+			console.log('test button worked');
+		}
+
 		$rootScope.chosenPitcher = {
 			name: ''
 		};
@@ -17,8 +21,10 @@
 
 		SharedState.initialize($scope, 'modal1');
 	    SharedState.initialize($scope, 'modal2');
-	    SharedState.initialize($scope, 'doingPullModal');
+	    // SharedState.initialize($scope, 'doingPullModal');
 	    SharedState.initialize($scope, 'choosePitcher');
+	    SharedState.initialize($scope, 'uiSidebarLeft');
+	    SharedState.initialize($scope, 'uiSidebarRight');
 
  		$scope.$on(fhsCordova.RESUME, resume);
 		$scope.$on(fhsCordova.PAUSE, pause);
