@@ -16,9 +16,9 @@
 		$rootScope.logout = AccountService.logout;
 
 		SharedState.initialize($scope, 'modal1');
-	    SharedState.initialize($scope, 'modal2');
-	    SharedState.initialize($scope, 'doingPullModal');
-	    SharedState.initialize($scope, 'choosePitcher');
+    SharedState.initialize($scope, 'modal2');
+    SharedState.initialize($scope, 'doingPullModal');
+    SharedState.initialize($scope, 'choosePitcher');
 
  		$scope.$on(fhsCordova.RESUME, resume);
 		$scope.$on(fhsCordova.PAUSE, pause);
