@@ -28,6 +28,9 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 	$scope.createPitcher = function(pitcher) {
 		PitcherService.createPitcher(pitcher).then(function(result){
 			$location.path('/');	
+			// Need to figure out how to update the pitchers sidebar when a new pitcher is created $scope.apply around push to pitchers array
+			// console.log('new pitcher created', result);
+			// $scope.pitchers.push(result);
 		});
 	}
 
