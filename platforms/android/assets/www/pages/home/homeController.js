@@ -1,25 +1,114 @@
 (function(gScope){
 	
 angular.module(gScope.AppNameId)
-.controller('homeController', ['$scope','$log', 'chartService', 'bluetoothService','AccountService','SharedState','$location', init]);
+.controller('homeController', ['$rootScope','$scope','$log', 'chartService', 'bluetoothService','AccountService','SharedState','$location','PitcherService','$timeout', init]);
 
-function init($scope,$log,chartService,bluetoothService,AccountService,SharedState,$location){
+function init($rootScope,$scope,$log,chartService,bluetoothService,AccountService,SharedState,$location,PitcherService,$timeout){
 
-	$scope.showModal = false;
+	$scope.pitcher = $rootScope.chosenPitcher;
+	
+	$scope.currPull = {
+		pull1: {
+			mainValue: 0
+		},
+		pull2: {
+			mainValue: 0
+		},
+		pull3: {
+			mainValue: 0
+		}
+	}
 
-	console.log(bluetoothService);
+	$scope.currLastPull = $rootScope.currLastPull;
+	$scope.currBaseline = $rootScope.currBaseline;
+
+	/**
+	 * CHARTING VALUES
+	 */
+
+	var DATA_PLOT_LIMIT = 50;
+	var startTime;
+	var targetChart = '#ct-chart';
+
+	// chartService.makeChart(targetChart,null);
+
+	/**
+	 * BLUETOOTH VALUES
+	 */
+
+	console.log('BLUETOOTH SERVICE: ',bluetoothService);
 
 	$scope.connected = false;
 	$scope.connecting = false;
-	$scope.connect = connect;
-	// $scope.disconnect = disconnect;
 
-	// $scope.streaming = false;
-	// $scope.start = start;
-	// $scope.stop = stop;
+	$scope.connect = connect;
+	$scope.disconnect = disconnect;
+
+	$scope.streaming = false;
+	$scope.start = start;
+	$scope.stop = stop;
+
+	/**
+	 * PULL VALUES
+	 */
+
+	$scope.needAnotherPull = false;
+
+	$scope.doPull = function(iteration){
+
+		var done = false;
+		var timer = 0;
+		var threshhold = 0;
+		var passedThreshhold = false;
+
+		// show modal
+		SharedState.turnOn('doingPullModal');
+
+		// START GETTING DATA
+		start();
+		
+		///////////////////////////////////////////////////////
+		while(!done){
+
+			// wait until there is more then threshhold noise in sensor
+			if(threshhold > 0){
+				passedThreshhold = true;
+			}
+			
+			// get data for 2 seconds after threshhold is reached
+			if(passedThreshhold){
+				startGettingData();
+				$timeout(function(){
+					done = true;
+				},2000);
+			}
+		}
+		///////////////////////////////////////////////////////
+		
+		stop();
+
+		if(iteration == 2){
+			// check to see if a 3rd pull is needed
+			// ????????
+		}
+	}
+
+	$scope.stopPull = function(){
+		SharedState.turnOff('doingPullModal');
+	}
+
+	/**
+	 * HELPER FUNCTIONS
+	 */
+	
+	function startGettingData(){
+// TODO
+	}
 
 	function connect(){
+console.log('connecting...');
 		if($scope.chosenPitcher.name == ''){
+console.log('no pitcher, showing modal choosePitcher...');
 			// need to choose a pitcher first
 			SharedState.turnOn('choosePitcher');
 			return false;
@@ -40,22 +129,22 @@ function init($scope,$log,chartService,bluetoothService,AccountService,SharedSta
 		);		
 	}
 
-	// function disconnect(){
-	// 	$scope.connecting = false;
-	// 	$scope.connected = false;
-	// 	bluetoothService.disconnect();
-	// }
+	function disconnect(){
+		$scope.connecting = false;
+		$scope.connected = false;
+		bluetoothService.disconnect();
+	}
 
-	// function start(){
-	// 	$scope.streaming = true;
-	// 	startTime = new Date().getTime() / 1000;
-	// 	bluetoothService.start(100);
-	// }
+	function start(){
+		$scope.streaming = true;
+		startTime = new Date().getTime() / 1000;
+		bluetoothService.start(100);
+	}
 
-	// function stop(){
-	// 	$scope.streaming = false;
-	// 	bluetoothService.stop();
-	// }
+	function stop(){
+		$scope.streaming = false;
+		bluetoothService.stop();
+	}
 
 	function dataHandler(dataPoint){
 		var r = {};

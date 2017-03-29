@@ -13,50 +13,58 @@ function($routeProvider, $logProvider,$locationProvider){
 //       }
 //   }
 
+  var path = ''; // android_asset/www/
+
   $logProvider.debugEnabled(true);
+
+  $locationProvider.hashPrefix('');
 
 	$routeProvider
   	.when('/', {
-  			templateUrl: 'pages/home/home.html',
+  			templateUrl: path + 'pages/home/home.html',
   			controller: 'homeController',
   			controllerAs: 'home'
         // resolve: checkUserStatus
   	})
     .when('/login', {
-      templateUrl: 'pages/login/loginTemplate.html',
+      templateUrl: path + 'pages/login/loginTemplate.html',
       controller: 'accountController',
       controllerAs: 'account'
     })
     .when('/splash', {
-        templateUrl:'pages/splash/splash.html',
+        templateUrl: path + 'pages/splash/splash.html',
         controller: 'splashController',
         conterollerAs: 'splash',
         // resolve: checkUserStatus
     })
     .when('/pitchers', {
-        templateUrl:'pages/pitchers/listPitchers.html',
+        templateUrl: 'pages/pitchers/listPitchers.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
     .when('/pitcher/add', {
-        templateUrl:'pages/pitchers/addPitcher.html',
+        templateUrl: 'pages/pitchers/addPitcher.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
     .when('/pitcher/:id', {
-        templateUrl:'pages/pitchers/viewPitcher.html',
+        templateUrl: path + 'pages/pitchers/viewPitcher.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
     .when('/pitcher/edit/:id', {
-        templateUrl:'pages/pitchers/editPitcher.html',
+        templateUrl: path + 'pages/pitchers/editPitcher.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
     })
   	.otherwise({redirectTo: '/'});
 
     // use the HTML5 History API
-    $locationProvider.html5Mode(true);
+    // $locationProvider.html5Mode({
+    //   enabled: false, 
+    //   requireBase: false,
+    //   rewriteLinks: false 
+    // });
 
 }]);
 

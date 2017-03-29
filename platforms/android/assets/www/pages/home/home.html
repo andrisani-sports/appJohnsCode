@@ -2,36 +2,40 @@
 	<div class="scrollable-content">
 
 	    <div class="section">
-			<h3>Home Page</h3>
+			<legend>Home Page</legend>
+
+			<h5>Current Pitcher: <b>{{ pitcher.name != '' ? chosenPitcher.name : 'Click on Pitchers to choose a pitcher' }}</b></h5>
 		</div>
 
-		<div class="section">
-			<h5>Current Pitcher: <b>{{ chosenPitcher.name != '' ? chosenPitcher.name : 'Click on Pitchers to choose a pitcher' }}</b></h5>
-		</div>
-
-		<div class="section" style="text-align:center;">
+		<div class="section" style="" ng-if="!connected">
 			<button ng-click="connect()" class="btn btn-success btn-block" style="margin: 0 auto;">START</button>
 		</div>
 
-	</div>
-</div>
+		<div class="section container" style="" ng-if="connected">
+			<h5>Baseline: {{currBaseline}}</h5>
+			<h5>Last Pull: {{currLastPull}}</h5>
 
-<div ui-content-for="modals">
-  <div class="modal" ui-if="choosePitcher" ui-shared-state='choosePitcher'>
-    <div class="modal-backdrop in"></div>
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button class="close" ui-turn-off="choosePitcher">&times;</button>
-          <h4 class="modal-title">Wait A Second</h4>
-        </div>
-        <div class="modal-body">
-          <p>Please choose a pitcher before starting.</p>
-        </div>
-        <div class="modal-footer">
-          <button ui-turn-off="choosePitcher" class="btn btn-default">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+			<div class="list-group">
+
+				<div class="curr-pull list-group-item">
+					<h5>Pull #1: {{currPull.pull1.mainValue}}</h5>
+					<button class="btn btn-primary pull-right" ng-click="doPull(1)" style="margin-top:-25px;">RUN</button>
+				</div>
+
+				<div class="curr-pull list-group-item">
+					<h5>Pull #2: {{currPull.pull2.mainValue}}</h5>
+					<button class="btn btn-primary pull-right" ng-click="doPull(2)" style="margin-top:-25px;">RUN</button>
+				</div>
+
+				<div class="curr-pull list-group-item" ng-if="needAnotherPull">
+					<h5>Pull #3: {{currPull.pull3.mainValue}}</h5>
+					<button class="btn btn-primary pull-right" ng-click="doPull(3)" style="margin-top:-25px;">RUN</button>
+				</div>
+
+			</div><!-- end .list-group -->
+
+			<button ng-click="disconnect()" class="btn btn-success btn-block" style="margin: 0 auto;">DONE</button>
+		</div>
+
+	</div><!-- /.scrollable-content -->
+</div><!-- /.scrollable -->

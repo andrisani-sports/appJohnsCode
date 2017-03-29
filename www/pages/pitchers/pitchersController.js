@@ -5,7 +5,10 @@ angular.module(gScope.AppNameId)
 
 function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoothService,PitcherService){
 
+	console.log('init pitchersController...');
+
 	PitcherService.getPitchers().then(function(result){
+		console.log('result of getPitchers()...',result);
 		$scope.pitchers = result;
 	});
 

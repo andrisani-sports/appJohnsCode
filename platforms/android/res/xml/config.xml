@@ -3,12 +3,12 @@
     <feature name="BluetoothSerial">
         <param name="android-package" value="com.megster.cordova.BluetoothSerial" />
     </feature>
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
     <feature name="Whitelist">
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
-    </feature>
-    <feature name="Device">
-        <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
     <name>PitcherPro</name>
     <description>
