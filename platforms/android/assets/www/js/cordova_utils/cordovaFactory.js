@@ -7,45 +7,97 @@
 
 function initialize($log, $rootScope){
 
-  	document.addEventListener("resume", onResume, false);
-	document.addEventListener("pause", onPause, false);
-
-    // rebroadcast into angular:
-    function backKeyDown(e){
-		e.preventDefault();
-		console.log('broadcasting back');
-		$rootScope.$broadcast('backButton');
-    }
-
+	/**
+     * set up environment variables
+     */
+	
 	var RESUME  = 'CORDOVA_RESUME';
 	var PAUSE   = 'CORDOVA_PAUSE';
 	var ONLINE  = 'CORDOVA_ONLINE';
-	var ready   = window.cordova !== undefined;
+	var OFFLINE = 'CORDOVA_OFFLINE';
 
 	var service = {};
+
+	/**
+	 * Check to see if Cordova is running (i.e. we're running in mobile device)
+	 */
+	
+	var ready   = window.cordova !== undefined;
+
+	if(ready) { // RUNNING ON MOBILE DEVICE
+		$log.debug('Cordova Ready');
+		service.platform = device.platform;
+     	document.addEventListener("backbutton", backKeyDown, false);
+ 	}else{ // RUNNING ON SOMETHING ELSE (PROBABLY BROWSER)
+    	$log.debug('Cordova not Ready');
+    	window.addEventListener('popstate', backKeyDown, false);
+    }
+
+	/**
+	 * Event Listeners needed by Angular (events originate with Cordova)
+	 */
+  	
+  	document.addEventListener("resume", onResume, false);
+	document.addEventListener("pause", onPause, false);
+
+	document.addEventListener("offline", onOffline, false);
+	document.addEventListener("online", onOnline, false);
+	
+	if(ready) { // add event listener based on whether app is running on device or in a local browser
+     	document.addEventListener("backbutton", backKeyDown, false);
+ 	}else{ 
+    	window.addEventListener('popstate', backKeyDown, false);
+    }
+
+	/**
+	 * SET UP SERVICE METHODS
+	 */
+
 	service.ready = ready;
 	service.RESUME = RESUME;
 	service.PAUSE = PAUSE;
 
-	if(ready) { // RUNNING ON MOBILE DEVICE
-		service.platform = device.platform;
-     	document.addEventListener("backbutton", backKeyDown, false);
- 	}else{ // RUNNING ON SOMETHING ELSE (PROBABLY BROWSER)
-    	window.addEventListener('popstate', backKeyDown, false);
-    }
-
-	if(ready) $log.debug('Cordova Ready');
-	else $log.debug('Cordova not Ready');
-
 	return service;
 
+    /**
+     * HELPER FUNCTIONS
+     * They retransmit a browser (Cordova event) through Angular's $rootScope
+     * which is caught in AppController (see the $scope.$on() functions there)
+     */
+	
 	function onResume(){
 		$log.debug('resuming the app');
 		$rootScope.$broadcast(RESUME);
 	}
+
 	function onPause(){
 		$log.debug('pausing the app');
 		$rootScope.$broadcast(PAUSE);
+	}
+
+    function backKeyDown(e){
+		e.preventDefault();
+		$rootScope.$broadcast('backButton');
+    }
+
+	function onOffline() {
+	    // Handle the offline event
+	    $rootScope.$broadcast(OFFLINE);
+	}
+
+	function onOnline() {
+	
+	    // Handle the online event
+	    var networkState = navigator.connection.type;
+	    
+	    if (networkState !== Connection.NONE) {
+	        // connected to Internet
+	        $rootScope.$broadcast(ONLINE,'Connection type: ' + networkState);
+	    }else{
+	    	// still not online
+	    	$rootScope.$broadcast(OFFLINE);
+	    }
+	
 	}
 
 }

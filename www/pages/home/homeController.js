@@ -55,6 +55,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	$scope.needAnotherPull = false;
 
 	$scope.doPull = function(iteration){
+		console.log('in doPull()...');
 
 		var done = false;
 		var timer = 0;
@@ -108,10 +109,10 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	function connect(){
 console.log('connecting...');
 		if($scope.chosenPitcher.name == ''){
-console.log('no pitcher, showing modal choosePitcher...');
-			// need to choose a pitcher first
-			SharedState.turnOn('choosePitcher');
-			return false;
+// console.log('no pitcher, showing modal choosePitcher...');
+// 			// need to choose a pitcher first
+// 			SharedState.turnOn('choosePitcher');
+// 			return false;
 		}
 		$scope.connecting = true;
 		bluetoothService.connect().then(
@@ -120,7 +121,6 @@ console.log('no pitcher, showing modal choosePitcher...');
 				$scope.connected = true;
 				$scope.connecting = false;
 				bluetoothService.subscribe(dataHandler);
-				$location.path('/pull');
 			}, function(err){
 				console.log('ERROR CONNECTING BLUETOOTH: ',err);
 				$scope.connected = false;
@@ -136,12 +136,14 @@ console.log('no pitcher, showing modal choosePitcher...');
 	}
 
 	function start(){
+		console.log('in start()...');
 		$scope.streaming = true;
 		startTime = new Date().getTime() / 1000;
 		bluetoothService.start(100);
 	}
 
 	function stop(){
+		console.log('in stop()...');
 		$scope.streaming = false;
 		bluetoothService.stop();
 	}

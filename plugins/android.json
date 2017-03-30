@@ -18,6 +18,9 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.andrasani.pitching"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.andrasani.pitching"
         }
     },
     "dependent_plugins": {}

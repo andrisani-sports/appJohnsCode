@@ -20,12 +20,13 @@
         <script type="text/javascript" src="bower_components/fastclick/lib/fastclick.js"></script>
         <script type="text/javascript" src="bower_components/chartist/dist/chartist.min.js"></script>
         <script src="node_modules/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
+        <script src="node_modules/ngstorage/ngStorage.min.js"></script>
         
         <!-- Defining the name which will be used by the Angular App in all the JS files -->
         <script type="text/javascript">
             AppNameId = "APA";
-            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-            console.log('viewport width: ' + w);
+            // var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            // console.log('viewport width: ' + w);
         </script>
 
         <!-- Sidebars -->
@@ -50,30 +51,7 @@
             </div><!-- /.scrollable -->
         </div>
         
-        <div class="sidebar sidebar-right" ><!-- ng-include="'pages/_shared/right_sidebar.html'" -->
-            <div class="scrollable" ui-turn-off='uiSidebarRight'>
-
-              <h1 class="scrollable-header app-name">
-                Pitchers List 
-                <a href="#pitcher/add" class="btn btn-primary pull-right" style="margin-top: 18px;">
-                    <i class="fa fa-plus"></i>
-                </a>
-              </h1>
-
-              <div class="scrollable-content" ng-controller="pitchersController">
-                
-                <div class="list-group" ui-toggle="uiSidebarRight">
-                  
-                  <a class="list-group-item" href="" ng-repeat="p in pitchers" ng-click="choosePitcher(p)">
-                    {{p.name}} 
-                    <i class="fa fa-user pull-left" style="line-height: 1.4"></i>
-                  </a>
-                  
-                </div><!-- /.scrollable-content -->
-              
-              </div><!-- /.scrollable-header -->
-            </div><!-- /.scrollable -->
-        </div>
+        <div class="sidebar sidebar-right" ng-include="'pages/pitchers/listPitchers.html'" ng-controller="pitchersController"></div>
 
         <div class="app" ui-swipe-right="Ui.turnOn('uiSidebarLeft')" ui-swipe-left="Ui.turnOff('uiSidebarRight')">
             
@@ -142,6 +120,7 @@
         <script type="text/javascript" src="services/chartFactory.js"></script>
         <script type="text/javascript" src="services/bluetoothFactory.js"></script>
         <script type="text/javascript" src="services/services.js"></script>
+        <script type="text/javascript" src="services/dataFactory.js"></script>
     
     <!-- Pages -->
         <script type="text/javascript" src="pages/splash/splashController.js"></script>

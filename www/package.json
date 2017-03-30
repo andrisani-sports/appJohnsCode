@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "mobile-angular-ui": "^1.3.4"
+    "mobile-angular-ui": "^1.3.4",
+    "ngstorage": "^0.3.11"
   }
 }

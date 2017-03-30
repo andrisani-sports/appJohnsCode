@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
 .factory('AccountService', ['$q','$rootScope','$location','$timeout', function($q,$rootScope,$location,$timeout) {
-  
+
   function currentUser() {
       var def = $q.defer();
       Stamplay.User.currentUser()

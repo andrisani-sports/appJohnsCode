@@ -12,23 +12,23 @@
 		</div>
 
 		<div class="section container" style="" ng-if="connected">
-			<h5>Baseline: {{currBaseline}}</h5>
-			<h5>Last Pull: {{currLastPull}}</h5>
+			<h3>Baseline: {{currBaseline}}</h3>
+			<h3>Last Pull: {{currLastPull}}</h3>
 
 			<div class="list-group">
 
 				<div class="curr-pull list-group-item">
-					<h5>Pull #1: {{currPull.pull1.mainValue}}</h5>
+					<h3>Pull #1: {{currPull.pull1.mainValue}}</h3>
 					<button class="btn btn-primary pull-right" ng-click="doPull(1)" style="margin-top:-25px;">RUN</button>
 				</div>
 
 				<div class="curr-pull list-group-item">
-					<h5>Pull #2: {{currPull.pull2.mainValue}}</h5>
+					<h3>Pull #2: {{currPull.pull2.mainValue}}</h3>
 					<button class="btn btn-primary pull-right" ng-click="doPull(2)" style="margin-top:-25px;">RUN</button>
 				</div>
 
 				<div class="curr-pull list-group-item" ng-if="needAnotherPull">
-					<h5>Pull #3: {{currPull.pull3.mainValue}}</h5>
+					<h3>Pull #3: {{currPull.pull3.mainValue}}</h3>
 					<button class="btn btn-primary pull-right" ng-click="doPull(3)" style="margin-top:-25px;">RUN</button>
 				</div>
 

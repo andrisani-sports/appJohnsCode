@@ -1,7 +1,12 @@
 (function(gScope){
 //provides the routing for the different pages of the app.
 
-var app = angular.module(gScope.AppNameId, ['ngRoute','mobile-angular-ui','starter.services']);
+var app = angular.module(gScope.AppNameId, [
+  'ngRoute',
+  'mobile-angular-ui',
+  'starter.services',
+  'ngStorage'
+]);
 
 app.config(['$routeProvider', '$logProvider', '$locationProvider', 
 function($routeProvider, $logProvider,$locationProvider){

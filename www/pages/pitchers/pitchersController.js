@@ -9,7 +9,7 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 
 	PitcherService.getPitchers().then(function(result){
 		console.log('result of getPitchers()...',result);
-		$scope.pitchers = result;
+		$rootScope.pitchers = result;
 	});
 
 	if ($routeParams.id) {
