@@ -1,0 +1,9 @@
+TO DO's
+
+have a loding gif and a modal response when you click START on home page
+
+fix the sidebar, choosing pitcher doesn't work
+
+fix the "areYouDone" modal, doesn't pop up, doesn't show error message
+
+make the sanitize function in DataService.save() into a recursive function that goes over the whole data object and returns the sanitized object

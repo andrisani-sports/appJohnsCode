@@ -24,6 +24,9 @@ body { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans
 .navbar-brand { font-family: 'Lobster', cursive; font-size: 30px; font-weight: bold; font-style: italic; line-height: 38px; height:70px; }
 .navbar-app .btn, .navbar-app .btn-navbar { color: #ffffff; opacity: 1 !important; font-size: 20px !important;}
 .list-group-item.active, .list-group-item.active:focus { background-color: #95abbe; border-color: #8699ab; }
+.navbar .on, .navbar .off{font-size: 35px !important;position: absolute;top: 18px;}
+.navbar .on{color:lightgreen;}
+.navbar .off{color:red;}
 
 /* sidebar nav */
 h1.scrollable-header.app-name { font-family: 'Lobster', cursive; font-weight: bold; font-style: italic; font-size: 26px; }
@@ -35,9 +38,9 @@ a.list-group-item, button.list-group-item, .list-group-item a { color: #505b66; 
 /*----------------------------------------------------------------------
  SPLASH
  ---------------------------------------------------------------------*/
-#splash-content { position: absolute; top: 50%; left: 50%; margin-top: -100px; margin-left: -115px; text-align: center; width: 230px; height: 200px; }
-#splash-content h1 { font-family: 'Lobster', cursive; font-size: 32px; color: #ffffff; font-weight: bold; font-style: italic; }
-#splash-content h1 sup { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #778898; font-size: 12px; line-height: 1; }
+#splash-content { position: absolute; top: 50%; left: 50%; margin-top: -150px; margin-left: -150px; text-align: center; width: 300px; height: 300px; }
+#splash-content h1 { font-family: 'Lobster', cursive; font-size: 42px; color: #ffffff; font-weight: bold; font-style: italic; }
+#splash-content h1 sup { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: #778898; font-size: 18px; line-height: 1; }
 img.splash { border: 6px solid #ffffff; border-radius: 60px; }
 
 /*----------------------------------------------------------------------

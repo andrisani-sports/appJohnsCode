@@ -18,15 +18,21 @@ function init($rootScope, $log){
 	return service;
 
 
-	 function makeChart(targetDiv, clickHandler){
-	    charts[targetDiv] = new Chartist.Line(targetDiv, {
-	          series: [[]]
-	        }, {
-	          axisX: {
-	            type: Chartist.AutoScaleAxis,
-	            onlyInteger: true,
-	          }
-	        });
+	 function makeChart(targetDiv, clickHandler, options){
+	 	if(typeof options === 'undefined'){
+	 		var options = {
+		 		// high: 130,
+		 		width: '600px',
+	  			height: '300px',
+	  			axisX: {
+		            type: Chartist.AutoScaleAxis,
+		            onlyInteger: true,
+		        }
+		 	}
+	 	}
+	 	var dataSetting = { series: [[]] };
+
+	    charts[targetDiv] = new Chartist.Line(targetDiv, dataSetting, options);
 
 	    if(clickHandler) 
 	        setTimeout(function(){

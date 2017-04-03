@@ -8,7 +8,6 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 	console.log('init pitchersController...');
 
 	PitcherService.getPitchers().then(function(result){
-		console.log('result of getPitchers()...',result);
 		$rootScope.pitchers = result;
 	});
 
@@ -16,7 +15,6 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 		// set id from $routeParams
 		var id = $routeParams.id;
 		
-
 		// get pitcher by $routeParams.id
 		PitcherService.getPitcher(id).then(function(result){
 			$scope.pitcher = result[0];
@@ -43,10 +41,21 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 	
 	// choose pitcher to run test
 	$scope.choosePitcher = function(pitcher){
-		$rootScope.chosenPitcher = pitcher;
-		$rootScope.currLastPull = PitcherService.getMostRecentPullValue(pitcher);
+		console.log('in choosePitcher()...',pitcher);
+		if(!$scope.$$phase) {
+			console.log('stopped digesting');
+			$scope.$apply(function(){
+				$rootScope.chosenPitcher = pitcher;
+			});
+		}else{
+			console.log('still digesting');
+			$rootScope.chosenPitcher = pitcher;
+		}
+		PitcherService.getMostRecentPullValue(pitcher).then(function(result){
+			$rootScope.currLastPull = result;
+		});
 		$rootScope.currBaseline = PitcherService.getCurrBaseline(pitcher);
-		$location.path('/home');
+		// $location.path('/home');
 		// sidebar is closed by the ui-turn-off='uiSidebarRight' attrib in right_sidebar.html
 	}
 

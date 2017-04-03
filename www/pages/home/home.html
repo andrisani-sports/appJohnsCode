@@ -11,30 +11,39 @@
 			<button ng-click="connect()" class="btn btn-success btn-block" style="margin: 0 auto;">START</button>
 		</div>
 
-		<div class="section container" style="" ng-if="connected">
+		<div class="section container" style="" ng-show="connected">
 			<h3>Baseline: {{currBaseline}}</h3>
 			<h3>Last Pull: {{currLastPull}}</h3>
 
 			<div class="list-group">
 
 				<div class="curr-pull list-group-item">
-					<h3>Pull #1: {{currPull.pull1.mainValue}}</h3>
-					<button class="btn btn-primary pull-right" ng-click="doPull(1)" style="margin-top:-25px;">RUN</button>
+					<h3>Pull #1: {{currPulls[1].mainValue}}</h3>
 				</div>
 
-				<div class="curr-pull list-group-item">
-					<h3>Pull #2: {{currPull.pull2.mainValue}}</h3>
-					<button class="btn btn-primary pull-right" ng-click="doPull(2)" style="margin-top:-25px;">RUN</button>
+				<div class="curr-pull list-group-item" ng-if="pullCounter > 1">
+					<h3>Pull #2: {{currPulls[2].mainValue}}</h3>
 				</div>
 
-				<div class="curr-pull list-group-item" ng-if="needAnotherPull">
-					<h3>Pull #3: {{currPull.pull3.mainValue}}</h3>
-					<button class="btn btn-primary pull-right" ng-click="doPull(3)" style="margin-top:-25px;">RUN</button>
+				<div class="curr-pull list-group-item" ng-if="pullCounter > 2">
+					<h3>Pull #3: {{currPulls[3].mainValue}}</h3>
+				</div>
+
+				<div class="curr-pull list-group-item" style="border: none;overflow:auto;">
+					<button class="btn btn-primary pull-right" ng-show="!doingPull && !donePulling" ng-click="startPull()">RUN</button>
 				</div>
 
 			</div><!-- end .list-group -->
 
-			<button ng-click="disconnect()" class="btn btn-success btn-block" style="margin: 0 auto;">DONE</button>
+			<button ng-click="disconnect()" class="btn btn-success btn-block" style="margin: 30px auto;clear:both;" ng-show="!doingPull">DONE</button>
+		</div>
+
+		<div class="section container" style="" ng-show="doingPull">
+        
+        	<div id="ct-chart" class="ct-perfect-fourth" style="height: 300px !important;"></div>
+
+        	<button class="btn btn-primary" ng-click="stopPull()">STOP</button>
+
 		</div>
 
 	</div><!-- /.scrollable-content -->

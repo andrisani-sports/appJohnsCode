@@ -1,0 +1,27 @@
+<div class="scrollable" ng-controller="pitchersController">
+ <div class="scrollable-content section" >
+    <legend>Pitcher List <a href="/pitcher/add" class="btn btn-primary pull-right"><i class="fa fa-plus"></i></a></legend>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="p in pitchers" >
+        <div class="btn-group pull-right">
+        <a ui-turn-on="myDropdown{{p._id}}" class="btn" style="padding-top: 0;">
+          <i class="fa fa-ellipsis-v"></i>
+        </a>
+        <ul class="dropdown-menu"
+          ui-outer-click="Ui.turnOff('myDropdown' + p._id)"
+          ui-outer-click-if="Ui.active('myDropdown' + p._id)"
+          role="menu"
+          ui-show="myDropdown{{p._id}}" 
+          ui-state="myDropdown{{p._id}}"
+          ui-turn-off="myDropdown{{p._id}}">
+
+          <li><a href="#pitcher/{{p._id}}">Pitcher Profile</a></li>
+          <li><a href="#pitcher/edit/{{p._id}}">Edit Pitcher</a></li>
+          <li><a href="" ng-click="choosePitcher(p)">Run Test</a></li>
+        </ul>
+      </div>
+        <span ng-click="choosePitcher(p)" style="width:85%;display:inline-block">{{p.name}}</span>
+      </li><!-- /.list-group-item -->
+    </ul><!-- /.list-group -->
+  </div><!-- /.scrollable-content -->
+</div><!-- /.scrollable -->

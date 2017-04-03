@@ -1,0 +1,19 @@
+<div class="modal" ui-if="doThirdPullModal" ui-state='doThirdPullModal'>
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" ui-turn-off="doThirdPullModal"><i class="fa fa-close"></i></button>
+        <h4 class="modal-title">Notice</h4>
+      </div>
+      <div class="modal-body">
+                
+        <p>The first two pulls were too far apart, so you will need to do another pull.</p>
+
+      </div>
+      <div class="modal-footer">
+        <button ui-turn-off="doThirdPullModal" class="btn btn-default">Close</button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-body -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('AccountService', ['$q','$rootScope','$location','$timeout', function($q,$rootScope,$location,$timeout) {
+.factory('AccountService', ['$q','$rootScope','$location','$timeout','dataService', function($q,$rootScope,$location,$timeout,dataService) {
 
   function currentUser() {
       var def = $q.defer();
@@ -58,18 +58,31 @@ angular.module('starter.services', [])
 
 }])
 
-.factory('PitcherService', ["$rootScope", "$q", function($rootScope, $q) {
+.factory('PulldataService', ["$rootScope", "$q",'dataService', function($rootScope, $q, dataService) {
+
+  return {
+    save: function(data){
+      console.log('PulldataService -> save(), data length',data.length, ' data',data);
+      dataService.saveObj('pitching_data',data);
+    }
+  }
+
+}])
+
+.factory('PitcherService', ["$rootScope", "$q",'dataService', function($rootScope, $q, dataService) {
 
   return {
 
     getMostRecentPullValue: function(pitcher){
       var id = pitcher.id;
-      return Stamplay.Object('pitchers')
-      .get({})
+      return Stamplay.Object('pitching_data')
+      .get({pitcher: id})
       .then(function(result){
-        var value;
-        value = result.data[0];
-        return value;
+        if(result.length > 0){
+          return result.data[0].mainValue;
+        }else{
+          return 0;
+        }
       });
     },
 
@@ -134,11 +147,18 @@ angular.module('starter.services', [])
 
       console.log('teamId,team in PitcherService.getPitchers',teamId,team);
 
-      Stamplay.Object('pitchers').get({'team':team})
-      // .findByCurrentUser(["owner"])
+      // Stamplay.Object('pitchers').get({'team':team})
+      dataService.getObj('pitchers',{'team':team})
       .then(function(response) {
-        console.log('response in PitcherService.getPitchers',response);
-        def.resolve(response.data);
+        if(response){
+          console.log('response in PitcherService.getPitchers',response);
+          if(response.data)
+            def.resolve(response.data);
+          else
+            def.resolve(response);
+        }else{
+          def.reject('no data found');
+        }
       }, function(err) {
         def.reject(err);
       })
@@ -181,7 +201,7 @@ angular.module('starter.services', [])
   }
 }])
 
-.factory('IssueService', ["$rootScope", "$q", function($rootScope, $q) {
+.factory('IssueService', ["$rootScope", "$q", 'dataService', function($rootScope, $q, dataService) {
 
   return {
 
@@ -208,7 +228,7 @@ angular.module('starter.services', [])
   
 }])
 
-.factory('TeamService', ["$rootScope", "$q", function($rootScope, $q) {
+.factory('TeamService', ["$rootScope", "$q", 'dataService', function($rootScope, $q, dataService) {
 
   return {
 
@@ -226,6 +246,7 @@ angular.module('starter.services', [])
     }
   
   }
+
 }])
 
 ;

@@ -1,16 +1,42 @@
 (function(gScope){
 
 angular.module(gScope.AppNameId)
-.factory('dataFactory', ['$rootScope', '$log', '$localStorage', '$q', init]);
+.factory('dataService', ['$rootScope', '$log', '$localStorage', '$q', init]);
 
 function init($rootScope, $log, $localStorage, $q){
-	
+
+	/**
+	 * INSTANTIATE PARAMS
+	 */
+
+	if(!$localStorage.temp)
+		$localStorage.temp = {};
+	if(!$localStorage.perm)
+		$localStorage.perm = {};
+
+	var returnData;
+
+	/**
+	 * CLOUD PARAMETERS
+	 */
+
+	var $stamplay = angular.copy(Stamplay);
+
+	/**
+	 * SERVICE
+	 */
+
 	// NOTE: use (return) promises!
 
 	// PROCESS FOR WRITE
 	// 1. get data to be written and save to localStorage
 	// 2. check if Internet connection available
-	// 3. if Yes, save to cloud, then mark as pushed in localStorage
+	// 3. if Yes, 
+	// 		create a local hash using timestamp and values for each data element
+	// 		save to cloud
+	// 		mark as 'pushedToCloud' in localStorage
+	// 		do a get on the local_hash field in stamplay
+	// 		if a record exists, mark as 'verified' in localStorage
 	// 4. check to see if close to limit, and if so, clear old pull data
 
 	// PROCESS FOR READ
@@ -21,24 +47,12 @@ function init($rootScope, $log, $localStorage, $q){
 	// 5. compare new data with local data
 	// 6. if new data is better then local data, store in localS, then return to $scope
 
-	// Service Methods WRITE: user.login(), obj.update(), obj.save() [new or update]
-	// Service Methods READ: user.currentUser(), obj.get()
-
-	var returnData;
-	var $stamplay = $angular.copy(Stamplay);
-
 	var service = {};
 
-	service.user = {
-		current: currentUser,
-		login: login
-	}; 
-	
-	service.obj = {
-		get: getObj,
-		update: updateObj,
-		save: saveObj
-	}; 
+	service.currentUser = currentUser;
+	service.login = login; 
+	service.getObj = getObj;
+	service.saveObj = saveObj;
 
 	return service;
 
@@ -75,86 +89,183 @@ function init($rootScope, $log, $localStorage, $q){
 	}
 
 	/**
-	 * OBJECT FUNCTIONS
+	 * GET
 	 */
 
 	 function getObj(objName,query){ // PROCESS FOR READ
 		var p = $q.defer();
 
+		console.log('DATASERVICE -> getObj(), query: ',query,' objName: ',objName);
+		
 		// 1. Check to see if data exists in localStorage
-		var localData = queryLocal(objName,query);
+		var localData = _queryLocalPerm(objName,query);
+
+		console.log('DATASERVICE -> getObj(), localData, ',localData);
 
 		// 2. if Yes, set to return variable, but don't return to $scope yet
-		if(localData){
-			returnData = angular.copy(localData);
-		}
-
+		// NOTE: returnData could be false, if no data found locally, but it 
+		// doesn't matter as it is a valid value to send back to the service, 
+		// and will be resolved below
+		returnData = angular.copy(localData);
+		
 		// 3. check if Internet is available
 		if($rootScope.online){
 			// 4. if Yes, check for updated data from Stamplay
 			Stamplay.Object(objName).get(query)
 			.then(function(response) {
+				console.log('DATASERVICE -> getObj(), Stamplay response',response);
 				// 5. compare new data with local data
-				// if(dt_modify in Stamplay is more recent then dt_update in localStorage)
+				// if nothing in localStorage
+				if(returnData == false){
+					returnData = response;
+					_saveToLocalPerm(objName,response);
+				}else{
+					// go through each record from Stamplay
+					var i;
+					var j;
+					var c;
+					var l;
+					var found;
+					for(i=0; i <= response.length; i++){
+						found = false;
+						c = response[i];
+					// find the corresponding record in localStorage.perm with _id
 
-				// if hash 
+// !!!!! need to go through queried localStorage records, not all records
 
-				// 6. if new data is better then local data, store in localS, then return to $scope
-				p.resolve(response.data);
+						for(j=0;j <= $localStorage.perm[objName].length; j++){
+							l = $localStorage.perm[objName][j];
+							if(c.id == l.id){
+					// if Stamplay[objName].dt_update is newer then 
+					// localStorage.perm[objName].dt_update, replace localStorage
+					// record with record from Stamplay
+								if(c.dt_update > l.dt_update)
+									l = angular.copy(c);
+								found = true;
+							}
+						}
+
+					// if any Stamplay records left over, add to localStorage.perm
+					// cause they would have originated off-device (admin panel)
+						if(!found){
+							$localStorage.perm[objName].push(c);
+							returnData.push(c);
+						}
+					}
+					// check for records in localStorage.temp, append to returnData
+					if($localStorage.temp[objName].length > 0){
+						$localStorage.temp[objName].map(function(e){
+							returnData.push(e);
+						});
+					}
+				}
+
+			 // ---------------------------
+				p.resolve(returnData);
+			 // ---------------------------
+
 			}, function(err) {
 				p.reject(new Error('no data found'));
 			})
-		
-		}else{
+		} // end if($rootScope.online)
+		else{
 			p.resolve(returnData);
 		}
 		
-		return p;
-
-	 }
-
-	 function saveObj(objName,data){ // PROCESS FOR WRITE
-		
-		// sanitize
-		for(var field in data){
-			if(typeof data[field] == 'number'){
-
-			}else{
-				data[field] = _sanitizeString(data[field]);
-			}
-		}
-
-		// 1. get data to be written and save to localStorage
-		// Scenarios: 
-		// a. data is array of objects, and some already exist in localStorage
-		// b. localStorage[objName] is append-only (i.e. pull data)
-		if(typeof data == 'object' && data.length > 1){
-
-		}else{
-			$localStorage[objName] = data;
-		}
-
-		// 2. check if Internet connection available
-		if($rootScope.online){
-			
-		}
-		// 3. if Yes, save to cloud, then mark as pushed in localStorage
-		
-		// 4. check to see if close to limit, and if so, clear old pull data
+		return p.promise;
 
 	 }
 
 	/**
+	 * SAVE
+	 */
+
+	function saveObj(objName,tempData){ // PROCESS FOR WRITE
+		
+		var data = [];
+		if(!$localStorage.temp[objName])
+			$localStorage.temp[objName] = [];
+		if(!$localStorage.perm[objName])
+			$localStorage.perm[objName] = [];
+
+		// convert data to array if its not
+		if( Object.prototype.toString.call( tempData ) !== '[object Array]' ) {
+		    data.push(tempData);
+		}else{
+			data = tempData;
+		}
+
+		// 1. get data to be written and save to $localStorage.temp
+		// 		add a hash for identification
+		// 		add a timestamp to help with uniqueness
+		// 		attempt to save to Stamplay (with hash)
+
+		var promiseArray = [];
+
+		for(var i=0; i < data.length; i++){
+			// sanitize
+			for(var field in data[i]){
+				if(typeof data[i][field] == 'string'){
+					data[i][field] = _sanitizeString(data[i][field]);
+				}
+			}
+			console.log('DATASERVICE -> saveObj(), post sanitize step');
+
+			// add timestamp
+			data[i].locTimestamp = new Date();
+			// add a hash
+			var tempHash = _hashString(JSON.stringify(data[i]));
+			data[i].hash = tempHash.toString();
+			// this timestamp won't get saved to cloud, so get rid of it
+			delete data[i].locTimestamp;
+			
+			// save to localStorage.temp
+			$localStorage.temp[objName].push(data[i]);
+			console.log('DATASERVICE -> saveObj(), pushed to localStorage.temp');
+			// check if Internet connection available
+			if($rootScope.online){
+				// save to Stamplay, add promise to array
+				promiseArray.push(Stamplay.Object(objName).save(data[i]));
+			}
+			console.log('DATASERVICE -> saveObj(), array of promises to Stamplay, length',promiseArray.length);
+
+		}
+
+		// saves could fail if Internet dies out mid-save, so it is possible 
+		// that array could be empty if all attempts fail
+		if(promiseArray.length > 0){ 
+			$q.all(promiseArray).then(function(result){
+				console.log('DATASERVICE -> saveObj(), in $q.all');
+				var record;
+				var i;
+				var j;
+				for(i in result){
+					// each result should be a record in localStorage.temp
+					// so find that record, and move it to localStorage.perm
+					$localStorage.perm[objName].push(result[i]);
+					for(j in $localStorage.temp[objName]){
+						record = $localStorage.temp[objName][j];
+						if(record.hash === result[i].hash){
+							delete $localStorage.temp[objName][j];
+						}
+					}
+				}
+			});
+		}
+		console.log('DATASERVICE -> saveObj(), FINISHED');
+	}
+
+	/**
 	 * HELPER (INTERNAL) FUNCTIONS
 	 */
-	
+
 	// http://stackoverflow.com/questions/23187013/is-there-a-better-way-to-sanitize-input-with-javascript
 	function _sanitizeString(str){
 	    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
 	    return str.trim();
 	}
 
-	function _queryLocal(objName,query){
+	function _queryLocalPerm(objName,query){
 
 	 	// if query is a string and empty, return false (for error)
 	 	// TODO make this return a new Error and add error handling above
@@ -162,17 +273,17 @@ function init($rootScope, $log, $localStorage, $q){
 	 		return false;
 
 	 	// if that object doesn't exist in localStorage (i.e. 'pitchers' or 'pulls')
-	 	if(!$localStorage[objName])
+	 	if(!$localStorage.perm[objName])
 	 		return false;
 
 	 	// if empty query & query is object, then return all instances of 'objName'
 	 	if(typeof query == 'object' && !Object.keys(query).length) {
-	 		return $localStorage[objName];
+	 		return $localStorage.perm[objName];
 	 	}
 
 	 	// query is: {'team':team} or { _id : id} or something similar
 	 	var dataForReturn = [];
-	 	var tempDataList = $localStorage[objName];
+	 	var tempDataList = $localStorage.perm[objName];
 	 	for(var obj in tempDataList){
 	 		var returnStatus = false;
 	 		for(var field in query){
@@ -184,6 +295,26 @@ function init($rootScope, $log, $localStorage, $q){
 	 	}
 	 	return dataForReturn;
 
+	}
+
+	function _saveToLocalPerm(objName,data){
+		// replace
+		$localStorage.perm[objName] = data;
+
+		// append 
+		// for(var i in )
+		// $localStorage[objName]
+	}
+
+	function _hashString(string){
+		var hash = 0, i, chr;
+		if (string.length === 0) return hash;
+		for (i = 0; i < string.length; i++) {
+			chr   = string.charCodeAt(i);
+			hash  = ((hash << 5) - hash) + chr;
+			hash |= 0; // Convert to 32bit integer
+		}
+		return hash;
 	}
 }
 

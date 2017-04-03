@@ -56,6 +56,9 @@ function initialize($log, $rootScope){
 	service.ready = ready;
 	service.RESUME = RESUME;
 	service.PAUSE = PAUSE;
+	service.ONLINE = ONLINE;
+	service.OFFLINE = OFFLINE;
+	service.checkOnlineStatus = checkOnline;
 
 	return service;
 
@@ -82,11 +85,12 @@ function initialize($log, $rootScope){
 
 	function onOffline() {
 	    // Handle the offline event
+	    console.log('fhsCordova offline');
 	    $rootScope.$broadcast(OFFLINE);
 	}
 
 	function onOnline() {
-	
+		console.log('fhsCordova online');
 	    // Handle the online event
 	    var networkState = navigator.connection.type;
 	    
@@ -98,6 +102,21 @@ function initialize($log, $rootScope){
 	    	$rootScope.$broadcast(OFFLINE);
 	    }
 	
+	}
+
+	function checkOnline(){
+		console.log('fhsCordova, checking for online status');
+	    
+	    // Handle the online event
+	    var networkState = navigator.connection.type;
+	    
+	    if (networkState !== Connection.NONE) {
+	        // online
+	        $rootScope.$broadcast(ONLINE,'Connection type: ' + networkState);
+	    }else{
+	    	// not online
+	    	$rootScope.$broadcast(OFFLINE);
+	    }
 	}
 
 }

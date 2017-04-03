@@ -5,7 +5,8 @@ var app = angular.module(gScope.AppNameId, [
   'ngRoute',
   'mobile-angular-ui',
   'starter.services',
-  'ngStorage'
+  'ngStorage',
+  'ngDomEvents'
 ]);
 
 app.config(['$routeProvider', '$logProvider', '$locationProvider', 

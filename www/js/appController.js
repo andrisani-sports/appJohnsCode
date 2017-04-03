@@ -2,8 +2,8 @@
 
 angular
 .module(gScope.AppNameId)
-.controller('AppController', ['$log', '$scope','fhsCordova','$rootScope', 'SharedState', 'AccountService', '$localStorage',
-function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $localStorage){
+.controller('AppController', ['$log', '$scope','fhsCordova','$rootScope', 'SharedState', 'AccountService', '$localStorage', 'dataService',
+function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $localStorage, dataService){
 
 	/**
 	 * SETUP VARIABLES FOR TEMPLATES
@@ -19,6 +19,9 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 	$rootScope.currBaseline;
 
 	$rootScope.online = false;
+	$rootScope.connected = false;
+
+	$rootScope.loadingOverlayText = '';
 
 	/**
 	 * INITIALIZE MODALS
@@ -30,6 +33,9 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
     SharedState.initialize($scope, 'uiSidebarLeft');
     SharedState.initialize($scope, 'uiSidebarRight');
     SharedState.initialize($scope, 'doingPullModal');
+    SharedState.initialize($scope, 'acceptPullModal');
+    SharedState.initialize($scope, 'areYouDoneModal');
+    SharedState.initialize($scope, 'loadingOverlay');
 
     /**
      * FUNCTIONS FOR TEMPLATES
@@ -49,11 +55,25 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 	$scope.$on(fhsCordova.PAUSE, pause);
 	
 	$scope.$on('backButton', back);
-	
-	$scope.$on(fhsCordova.OFFLINE, online);
-	$scope.$on(fhsCordova.ONLINE, offline);
+
+	$scope.$on(fhsCordova.OFFLINE, offline);
+	$scope.$on(fhsCordova.ONLINE, online);
+
+	/**
+     * CHECK TO SEE IF DEVICE ONLINE OR NOT
+     * this kicks off the event consumed by the $on above, so must
+     * be placed after the HANDLE EVENTS section above
+     */
+
+    fhsCordova.checkOnlineStatus();
+
+
+	/**
+	 * HELPER FUNCTIONS
+	 */
 
 	function back(){
+
 		console.log('back pressed');
 
 		// OPTION 1
@@ -80,25 +100,37 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 		// 	 }
 		// }
 		
-		}
+	}
 
-		function pause(event){
-			$log.debug("AppController: pause");
-		}
+	function pause(event){
+		$log.debug("AppController: pause");
+	}
 
-		function resume(event){
-			$log.debug("AppController: resume");
-		}
+	function resume(event){
+		$log.debug("AppController: resume");
+	}
 
-		function offline(event){
-			$log.debug('AppController: offline',event);
+	function offline(event){
+		$log.debug('AppController: offline',event,$rootScope);
+		if(!$scope.$$phase) {
+			$scope.$apply(function(){
+				$rootScope.online = false;
+			});
+		}else{
 			$rootScope.online = false;
 		}
+	}
 
-		function online(event){
-			$log.debug('AppController: online',event);
+	function online(event){
+		$log.debug('AppController: online',event,$rootScope);
+		if(!$scope.$$phase) {
+			$scope.$apply(function(){
+				$rootScope.online = true;
+			});
+		}else{
 			$rootScope.online = true;
 		}
+	}
 
 
 }]);
