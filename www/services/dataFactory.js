@@ -53,6 +53,7 @@ function init($rootScope, $log, $localStorage, $q){
 	service.login = login; 
 	service.getObj = getObj;
 	service.saveObj = saveObj;
+	service.pushPendingToCloud = pushPendingToCloud;
 
 	return service;
 
@@ -98,9 +99,13 @@ function init($rootScope, $log, $localStorage, $q){
 		console.log('DATASERVICE -> getObj(), query: ',query,' objName: ',objName);
 		
 		// 1. Check to see if data exists in localStorage
-		var localData = _queryLocalPerm(objName,query);
-
-		console.log('DATASERVICE -> getObj(), localData, ',localData);
+		try{
+			var localData = _queryLocal('perm',objName,query);
+			console.log('DATASERVICE -> getObj(), localData, ',localData);
+		}catch(e){
+			console.log('Error in getObj:',e);
+			return false;
+		}
 
 		// 2. if Yes, set to return variable, but don't return to $scope yet
 		// NOTE: returnData could be false, if no data found locally, but it 
@@ -113,6 +118,8 @@ function init($rootScope, $log, $localStorage, $q){
 			// 4. if Yes, check for updated data from Stamplay
 			Stamplay.Object(objName).get(query)
 			.then(function(response) {
+				if(response.data)
+					response = response.data;
 				console.log('DATASERVICE -> getObj(), Stamplay response',response);
 				// 5. compare new data with local data
 				// if nothing in localStorage
@@ -131,7 +138,7 @@ function init($rootScope, $log, $localStorage, $q){
 						c = response[i];
 					// find the corresponding record in localStorage.perm with _id
 
-// !!!!! need to go through queried localStorage records, not all records
+					// !!!!! need to go through queried localStorage records, not all records
 
 						for(j=0;j <= $localStorage.perm[objName].length; j++){
 							l = $localStorage.perm[objName][j];
@@ -222,11 +229,13 @@ function init($rootScope, $log, $localStorage, $q){
 			// save to localStorage.temp
 			$localStorage.temp[objName].push(data[i]);
 			console.log('DATASERVICE -> saveObj(), pushed to localStorage.temp');
+			
 			// check if Internet connection available
 			if($rootScope.online){
 				// save to Stamplay, add promise to array
 				promiseArray.push(Stamplay.Object(objName).save(data[i]));
 			}
+			
 			console.log('DATASERVICE -> saveObj(), array of promises to Stamplay, length',promiseArray.length);
 
 		}
@@ -256,6 +265,45 @@ function init($rootScope, $log, $localStorage, $q){
 	}
 
 	/**
+	 * 
+	 */
+	
+	 function pushPendingToCloud(){
+return; 	
+	 	var pending = $localStorage.temp;
+	 	var promiseArray = [];
+
+	 	for(objName in pending){
+	 		// check if Internet connection available
+			if($rootScope.online){
+				// save to Stamplay, add promise to array
+				promiseArray.push(Stamplay.Object(objName).save(data[i]));
+			}
+	 	}
+
+	 	if(promiseArray.length > 0){ 
+			$q.all(promiseArray).then(function(result){
+				var record;
+				var i;
+				var j;
+				for(i in result){
+					// each result should be a record in localStorage.temp
+					// so find that record, and move it to localStorage.perm
+					$localStorage.perm[objName].push(result[i]);
+					for(j in $localStorage.temp[objName]){
+						record = $localStorage.temp[objName][j];
+						if(record.hash === result[i].hash){
+							delete $localStorage.temp[objName][j];
+						}
+					}
+				}
+			});
+		}
+
+	 }
+
+
+	/**
 	 * HELPER (INTERNAL) FUNCTIONS
 	 */
 
@@ -265,34 +313,54 @@ function init($rootScope, $log, $localStorage, $q){
 	    return str.trim();
 	}
 
-	function _queryLocalPerm(objName,query){
+	function _queryLocal(storage,objName,query){
+		console.log('DATASERVICE -> IN _queryLocal(), storage: ',storage,' objName: ',objName,' query: ',query,' typeof query: ', typeof query);
 
-	 	// if query is a string and empty, return false (for error)
-	 	// TODO make this return a new Error and add error handling above
+		// 'storage' is either temp or perm
+		if(storage != 'temp' && storage != 'perm')
+			return new Error('Storage is empty or wrong type');
+
+	 	// if query is a string and empty, return error
 	 	if((typeof query == 'string' && query == ''))
-	 		return false;
+	 		return new Error('Query is empty or wrong type');
 
-	 	// if that object doesn't exist in localStorage (i.e. 'pitchers' or 'pulls')
-	 	if(!$localStorage.perm[objName])
-	 		return false;
+	 	// if that object doesn't exist in localStorage 
+	 	// (objName could be 'pitchers' or 'pulls')
+	 	if(!$localStorage[storage][objName])
+	 		return new Error('Object '+objName+' does not exist in localStorage['+storage+']');
 
 	 	// if empty query & query is object, then return all instances of 'objName'
 	 	if(typeof query == 'object' && !Object.keys(query).length) {
-	 		return $localStorage.perm[objName];
+	 		return $localStorage[storage][objName];
 	 	}
 
+		console.log('DATASERVICE -> _queryLocal(), CLEARED ALL ERROR CHECKS,localStorage',$localStorage);
+	 	
 	 	// query is: {'team':team} or { _id : id} or something similar
 	 	var dataForReturn = [];
-	 	var tempDataList = $localStorage.perm[objName];
-	 	for(var obj in tempDataList){
-	 		var returnStatus = false;
+	 	var tempDataList = $localStorage[storage][objName];
+	 	if(tempDataList.data)
+	 		tempDataList = tempDataList.data;
+	 	console.log('DATASERVICE -> _queryLocal(), tempDataList: ',tempDataList);
+	 	var obj;
+	 	var returnStatus;
+	 	for(var index in tempDataList){
+			obj = tempDataList[index];
+	 		returnStatus = false;
 	 		for(var field in query){
-	 			if(obj[field] && obj[field] == query[field])
-	 				returnStatus = true;
+				if (obj[field].constructor == Array){
+					if(_arraysEqual(obj[field],query[field]))
+						returnStatus = true;
+				}else{
+					if(obj[field] && obj[field] == query[field]){
+		 				returnStatus = true;
+		 			}
+				}
 	 		}
 	 		if(returnStatus)
 	 			dataForReturn.push(obj);
 	 	}
+		console.log('DATASERVICE -> _queryLocal(), dataForReturn',dataForReturn);
 	 	return dataForReturn;
 
 	}
@@ -315,6 +383,24 @@ function init($rootScope, $log, $localStorage, $q){
 			hash |= 0; // Convert to 32bit integer
 		}
 		return hash;
+	}
+
+	// taken from http://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
+	function _arraysEqual(a, b) {
+		if (a === b) return true;
+		if (a == null || b == null) return false;
+		if (a.length != b.length) return false;
+
+		// If you don't care about the order of the elements inside
+		// the array, you should sort both arrays here.
+		a.sort();
+		b.sort();
+
+		for (var i = 0; i < a.length; ++i) {
+			if (a[i] !== b[i]) 
+				return false;
+		}
+		return true;
 	}
 }
 

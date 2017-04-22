@@ -88,14 +88,16 @@ angular.module('starter.services', [])
 
     getCurrBaseline: function(pitcher){
       var baseLine;
+      var def = $q.defer();
 
       // assume that most recent baseline will be at [0]
       if(pitcher.baselines && pitcher.baselines.length > 0)
         baseLine = pitcher.baselines[0].value;
       else
         baseLine = 0;
+      def.resolve(baseLine);
 
-      return baseLine;
+      return def.promise;
     },
 
     createPitcher : function(pitcher) {

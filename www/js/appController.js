@@ -19,7 +19,8 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 	$rootScope.currBaseline;
 
 	$rootScope.online = false;
-	$rootScope.connected = false;
+
+	$rootScope.connected = false; // for Bluetooth connection
 
 	$rootScope.loadingOverlayText = '';
 
@@ -36,6 +37,7 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
     SharedState.initialize($scope, 'acceptPullModal');
     SharedState.initialize($scope, 'areYouDoneModal');
     SharedState.initialize($scope, 'loadingOverlay');
+    SharedState.initialize($scope, 'bluetoothNotConnecting');
 
     /**
      * FUNCTIONS FOR TEMPLATES
@@ -129,6 +131,10 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 			});
 		}else{
 			$rootScope.online = true;
+
+			// PUSH PENDING DATA
+			dataService.pushPendingToCloud();
+
 		}
 	}
 

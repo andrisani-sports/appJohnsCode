@@ -52,11 +52,17 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 			$rootScope.chosenPitcher = pitcher;
 		}
 		PitcherService.getMostRecentPullValue(pitcher).then(function(result){
+			console.log('in getMostRecentPullValue(), result',result);
 			$rootScope.currLastPull = result;
+			PitcherService.getCurrBaseline(pitcher).then(function(result){
+				console.log('getCurrBaseline(), result',result);
+				$rootScope.currBaseline = result;
+			}).then(function(result){
+				console.log('last step of choosePitcher(), about to redirect to home');
+				$location.path('/home');
+				// sidebar is closed by the ui-turn-off='uiSidebarRight' attrib in right_sidebar.html
+			});
 		});
-		$rootScope.currBaseline = PitcherService.getCurrBaseline(pitcher);
-		// $location.path('/home');
-		// sidebar is closed by the ui-turn-off='uiSidebarRight' attrib in right_sidebar.html
 	}
 
 }

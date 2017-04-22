@@ -1,0 +1,53 @@
+APP TO DO's
+
+test the function to upload pending data when internet connection becomes available
+
+finish the getData functionality
+
+finish the saveData functionality
+
+finish the specific services for pitchers, data, teams
+
+DONE 	fix the sidebar, choosing pitcher doesn't work
+
+DONE 	have a loading gif when you click START on home page
+
+DONE 	have a modal response if bluetooth connection doesn't happen
+
+DONE 	fix the "areYouDone" modal, doesn't pop up, doesn't show error message
+
+DONE 	the function to detect need for 3rd pull is not right
+
+DONE 	need to fix the pull counter, it's showing a 3rd pull even if not needing a 3rd
+
+DONE 	make the right sidebar into a list without the 3 dots button
+
+need to update $rootScope.currBaseline once a pull is complete
+
+seems to be an issue with saving main mainValue to Stamplay (it shows as 0; maybe a rounding up in view?)
+
+the right sidebar isn't showing anything if no wifi when app opens, should get cache
+
+add a "SAVING" modal (spinner?) when done with pulls, then automically disconnect, no need to push button (or push it so they have time to see results?)
+
+shorten the unique id for pitchers (see function that Steve put in)
+
+get instructions text from Damian
+
+make the sanitize function in DataService.save() into a recursive function that goes over the whole data object and returns the sanitized object
+
+unit tests
+
+
+
+ADMIN APP TO DO'S
+
+the big chart to anyalyze a pitcher's data
+
+hide the pulls field in Pitching_Data model; Damian doesn't want to see raw data, 
+
+
+
+TEAM APP TO DO'S
+
+interceptor for team doesn't work (permanent filter so login only shows team info)

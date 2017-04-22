@@ -4,7 +4,7 @@
 	    <div class="section">
 			<legend>Home Page</legend>
 
-			<h3>Current Pitcher: <b>{{ pitcher.name != '' ? chosenPitcher.name : 'Click on Pitchers to choose a pitcher' }}</b></h3>
+			<h3>Current Pitcher: <b>{{ chosenPitcher.name != '' ? chosenPitcher.name : 'Click on Pitchers to choose a pitcher' }}</b></h3>
 		</div>
 
 		<div class="section" style="" ng-if="!connected">

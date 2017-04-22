@@ -96,6 +96,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 			if($scope.pullCounter == 1){
 
 				$localStorage.currPulls = $scope.currPulls;
+				$scope.pullCounter++;
 
 			}
 			else if($scope.pullCounter == 2){
@@ -119,6 +120,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 				
 					$localStorage.currPulls = $scope.currPulls;
 					SharedState.turnOn('doThirdPullModal');
+					$scope.pullCounter++;
 				
 				}
 			
@@ -136,8 +138,6 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 				$scope.donePulling = true;
 			
 			}
-
-			$scope.pullCounter++;
 		
 		}
 		
@@ -152,10 +152,11 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	}
 
 	function twoPullsOk(){ // Math.pow(4, 3);
+		console.log('in twoPullsOk()');
 		var minimumDifference = 2; // in pounds
 		
 		// get difference of the first two pulls without negative numbers
-		var diff = ($scope.currPulls['1'].mainValue - $scope.currPulls['2']);
+		var diff = ($scope.currPulls['1'].mainValue - $scope.currPulls['2'].mainValue);
 		diff = Math.pow(diff,2);
 		diff = Math.sqrt(diff);
 		
@@ -263,11 +264,13 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 				$scope.connected = false;
 				$scope.connecting = false;
 				$rootScope.connected = false;
+				SharedState.turnOn('bluetoothNotConnecting');
 			}
 		);		
 	}
 
-	function areYouDone(done){
+	$scope.areYouDone = function(done){
+		console.log('in areYouDone(), done',done);
 		if(done){
 			$scope.donePulling = true;
 			disconnect();
@@ -278,6 +281,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	function disconnect(){
 
 		if(!$scope.donePulling){
+			console.log('in disconnect(), not done, showing modal');
 			SharedState.turnOn('areYouDoneModal');
 			return false;
 		}
