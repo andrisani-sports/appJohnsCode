@@ -10,7 +10,7 @@ function init($rootScope, $log, $q){
 
 	//constants for the device
 	
-	var analogPorts = [0,1,2,3,4,5];
+	var analogPorts = [0,1,2,3,4,5,8];
 	var Unipolar = 1;
 	var Bipolar = 0;
 	var _Polarity = Unipolar;
@@ -18,9 +18,10 @@ function init($rootScope, $log, $q){
 	var V2_5 = 1;
 	var	V1_25 = 0;
 	var _VRef = V2_5;	
-	var MAC_ADDRESS = "00:06:66:0A:32:9D";
+	// var MAC_ADDRESS = "00:06:66:0A:32:9D";
+	var MAC_ADDRESS = "20:16:12:12:67:08"; // the new Arduino BT board
 
-	var READ 			= getReadAnlogCommand(analogPorts[0],analogPorts[1]);   //read analog command code
+	var READ 			= getReadAnlogCommand(analogPorts[0],analogPorts[6]);   //read analog command code
 	var IDENTIFY 		= '>' + checksum("i"); 									//identify command code
 	var RESET 			= '>' + checksum("R"); 									//reset command code
 
@@ -31,17 +32,28 @@ function init($rootScope, $log, $q){
 	service.subscribe = subscribe;
 	service.start = start;
 	service.stop = stop;
+	service.getUnpaired = getUnpaired;
 
 	return service;
 
 
 	//Service Functions
 
+	function getUnpaired(){
+		var deferred = $q.defer();
+		bluetoothSerial.discoverUnpaired(function(list){
+			console.log('list of devices',list);
+			deferred.resolve(list);
+		}, function(){
+			deferred.reject('failed to get list of unpaired');
+		})
+	}
+
 	function connect(){
 		var deferred = $q.defer();
 		bluetoothSerial.connect(MAC_ADDRESS, 
 			function(){
-				console.log('connected to the device');
+				console.log('connected to the NEW device');
 				deferred.resolve('connected to ' + MAC_ADDRESS);
 			},
 
@@ -60,8 +72,16 @@ function init($rootScope, $log, $q){
 		bluetoothSerial.disconnect();
 	}
 
-	function subscribe(callback){
+	function subscribeOld(callback){
 		bluetoothSerial.subscribe('\r', function(data){ callback(decodeData(data)); } , failure);
+	}
+
+	function subscribe(callback){
+console.log('BLUETOOTH FACTORY: subscribe');
+		bluetoothSerial.subscribe('\r',function(data){
+			callback(data);
+		},
+		failure);
 	}
 
 	function start(interval){
@@ -89,6 +109,7 @@ function init($rootScope, $log, $q){
 	function decodeData(buffer){
 		//decodes the data received from the device
 		var data = checksumOK(buffer);
+console.log('buffer',buffer,'data',data);
 	    if(data.success){
 	         var rawdata = parseInt(data.value, 16);
 	         if (_Polarity == Bipolar){

@@ -39,7 +39,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	 * BLUETOOTH
 	 */
 
-	console.log('BLUETOOTH SERVICE: ',bluetoothService);
+	bluetoothService.getUnpaired();
 
 	$scope.connected = false;
 	$scope.connecting = false;
@@ -79,9 +79,13 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 
 		console.log('in acceptOrReject(), $scope.dataToSave',$scope.data);
 		$scope.data.map(function(e){
-			if(e.y > tempMainValue)
+console.log('in $scope.data.map: e',e);
+			if(e.y > tempMainValue){
+console.log('updating tempMainValue',tempMainValue);
 				tempMainValue = e.y;
+			}
 		});
+console.log('tempMainValue',tempMainValue);
 		$scope.currPulls[$scope.pullCounter].mainValue = tempMainValue;
 		
 		// GET ACCEPT OR REJECT FROM USER
@@ -113,7 +117,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 					PulldataService.save(data);
 					
 					$scope.currPulls.mainValue = ( $scope.currPulls['1'].mainValue + $scope.currPulls['2'].mainValue ) / 2;
-					
+					updateBaseline($scope.currPulls.mainValue);
 					$scope.donePulling = true;
 				
 				}else{
@@ -135,6 +139,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 				};
 				PulldataService.save(data);
 				$scope.currPulls.mainValue = getAvgOfThreePulls();
+				updateBaseline($scope.currPulls.mainValue);
 				$scope.donePulling = true;
 			
 			}
@@ -236,6 +241,15 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 		chartService.setData(target, $scope.data);
 	}
 
+	function updateBaseline(value){
+		if($rootScope.currBaseline == 0)
+			$rootScope.currBaseline = $scope.currPulls.mainValue;
+		// save in database
+		PitcherService.updateCurrBaseline(pitcher,value).then(function(result){
+console.log('updated baseline in Pitcher data obj in Stamplay: result',result);
+		});
+	}
+
 	/**
 	 * BLUETOOTH CONNECTION FUNCTIONS
 	 */
@@ -302,25 +316,15 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 	}
 
 	function dataHandler(dataPoint){
+console.log('dataPoint',dataPoint);
+		var temp = dataPoint.split('|');
+		var reading = parseFloat(temp[1].toString());
+		var load = parseFloat(temp[3].toString());
+console.log('reading',reading,'load',load);
+
 		var r = {};
         r.x = new Date().getTime() / 1000 - startTime;
-        
-        //  EXPLANATION OF DATA FROM SENSOR
-        //  Number is the number of bits representing the voltage 
-        //  between AIN0 and AIN1. It ranges from 0 to 2^22-1. 0 
-        //  is -3.3V, 2^21 is 0V and 2^22-1 is 3.3V. The load cell has a 
-        //  calibration factor about 2mV/V per 100 lbs. The load cell is wired 
-        //  so that the excitation voltage is 3.3V. Therefore a voltage of 
-        //  + or - 6.6mV is output by the cell with 100 lb load. Plus or 
-        //  minus depends on whether you are pushing or pulling. Introduce 
-        //  an extra calibration factor with units lbs/mV/V. Then use the 
-        //  calibration factor on the load cell to get to the actual force 
-        //  reading.
-        
-        // r.y = 100 / (dataPoint.volt / 3.3);
-        r.y = dataPoint.volt;
-
-    	console.log('dataPoint',dataPoint);
+        r.y = load;
     	
     	$scope.data.push(r);
     	$scope.rawSensorData.push(dataPoint);

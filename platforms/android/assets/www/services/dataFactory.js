@@ -93,71 +93,74 @@ function init($rootScope, $log, $localStorage, $q){
 	 * GET
 	 */
 
-	 function getObj(objName,query){ // PROCESS FOR READ
+	function getObj(objName,query){ // PROCESS FOR READ
 		var p = $q.defer();
 
 		console.log('DATASERVICE -> getObj(), query: ',query,' objName: ',objName);
 		
 		// 1. Check to see if data exists in localStorage
+		
 		try{
 			var localData = _queryLocal('perm',objName,query);
-// var localTemp = _queryLocal('temp',objName,query);
-// var localPerm = _queryLocal('temp',objName,query);
+			if(localData instanceof Error){
+				console.log('NON-FATAL ERROR: ',localData);
+				localData = false;
+			}
 			console.log('DATASERVICE -> getObj(), localData, ',localData);
 		}catch(e){
 			console.log('Error in getObj:',e);
-			return false;
+			localData = false;
 		}
 
 		// 2. if Yes, set to return variable, but don't return to $scope yet
 		// NOTE: returnData could be false, if no data found locally, but it 
 		// doesn't matter as it is a valid value to send back to the service, 
 		// and will be resolved below
-		returnData = angular.copy(localData);
 		
+		returnData = angular.copy(localData);
+		console.log('DATASERVICE -> returnData',typeof returnData,returnData);
+
 		// 3. check if Internet is available
+		
 		if($rootScope.online){
-			// 4. if Yes, check for updated data from Stamplay
+		
+		// 4. if Yes, check for updated data from Stamplay
+		
 			Stamplay.Object(objName).get(query)
 			.then(function(response) {
+				if(response.data)
+					response = response.data;
 				console.log('DATASERVICE -> getObj(), Stamplay response',response);
-				// 5. compare new data with local data
-				// if nothing in localStorage
+		// 5. compare new data with local data if nothing in localStorage
+				
 				if(returnData == false){
+					console.log('DATASERVICE -> getObj(), return == false // adding result to returnData and saving to local perm');
 					returnData = response;
-					_saveToLocalPerm(objName,response);
+					_saveToLocalPerm(objName,response,true);
 				}else{
+					console.log('DATASERVICE -> getObj(), return == true // going through result line by line to add to perm');
 					// go through each record from Stamplay
-					var i;
-					var j;
-					var c;
-					var l;
-					var found;
+					var i; // for()
+					var j; // for()
+					var c; // the current response record
+					var l; // the corresponding localStorage record
+					var found; // flag - whether a match or not
+
 					for(i=0; i <= response.length; i++){
 						found = false;
 						c = response[i];
 					// find the corresponding record in localStorage.perm with _id
+						l = _findInLocal('perm',c._id);
 
-// !!!!! need to go through queried localStorage records, not all records
-// use localPerm above
-
-						for(j=0;j <= $localStorage.perm[objName].length; j++){
-							l = $localStorage.perm[objName][j];
-							if(c.id == l.id){
-					// if Stamplay[objName].dt_update is newer then 
-					// localStorage.perm[objName].dt_update, replace localStorage
-					// record with record from Stamplay
-								if(c.dt_update > l.dt_update)
-									l = angular.copy(c);
-								found = true;
-							}
-						}
-
-					// if any Stamplay records left over, add to localStorage.perm
-					// cause they would have originated off-device (admin panel)
-						if(!found){
-							$localStorage.perm[objName].push(c);
+// WHAT IF THE RESULT FROM STAMPLAY IS A NEWER (DIFFERENT) RECORD THEN WHAT'S IN
+// LOCALSTORAGE.PERM??
+						if(!l){
+							// if any Stamplay records left over, add to localStorage.perm
+							// cause they would have originated off-device (admin panel)
+							_saveToLocalPerm(objName,c,false);
 							returnData.push(c);
+						}else{
+							returnData.push(l);
 						}
 					}
 					// check for records in localStorage.temp, append to returnData
@@ -169,6 +172,7 @@ function init($rootScope, $log, $localStorage, $q){
 				}
 
 			 // ---------------------------
+			 	console.log('about to resolve from DATASERVICE!',returnData);
 				p.resolve(returnData);
 			 // ---------------------------
 
@@ -366,13 +370,37 @@ return;
 
 	}
 
-	function _saveToLocalPerm(objName,data){
-		// replace
-		$localStorage.perm[objName] = data;
+	function _saveToLocalPerm(objName,data,overwrite){
+		console.log('DATASERVICE -> _saveToLocalPerm(): overwrite',overwrite);
+		if(overwrite){
+			console.log('DATASERVICE -> _saveToLocalPerm(), pushing to localStorage');
+			// replace
+			console.log('$localStorage.perm before',$localStorage.perm);
+			$localStorage.perm[objName] = data;
+			console.log('$localStorage.perm after',$localStorage.perm);
+		}else{
+			console.log('DATASERVICE -> _saveToLocalPerm(), appending to localStorage');
+			// append 
+			for(i in data){
+				$localStorage.perm[objName].push(data[i]);
+			}
+		}
+	}
 
-		// append 
-		// for(var i in )
-		// $localStorage[objName]
+	function _findInLocal(storage,id){
+		// storage == 'perm' || storage == 'temp'
+		// !!!!! need to go through queried localStorage records, not all records
+		for(j=0;j <= $localStorage.perm[objName].length; j++){
+			l = $localStorage.perm[objName][j];
+			if(c.id == l.id){
+				// if Stamplay[objName].dt_update is newer then 
+				// localStorage.perm[objName].dt_update, replace localStorage
+				// record with record from Stamplay
+				if(c.dt_update > l.dt_update)
+					l = angular.copy(c);
+				found = true;
+			}
+		}
 	}
 
 	function _hashString(string){

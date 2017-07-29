@@ -4,16 +4,17 @@ angular.module('starter.services', [])
 
   function currentUser() {
       var def = $q.defer();
-      Stamplay.User.currentUser()
-      .then(function(response) {
-        if(response.user === undefined) {
+
+      if(window.localStorage['user'] && window.localStorage['user'] != ''){
+        var user = JSON.parse(window.localStorage['user']);
+        if(!user._id)
           def.resolve(false);
-        } else {
-          def.resolve(response.user);
-        }
-      }, function(error) {
-        def.reject();
-      })
+        else
+          def.resolve(user);
+      }else{
+        def.resolve(false);
+      }
+      
       return def.promise;
     } // end currentUser()
 
@@ -100,7 +101,20 @@ angular.module('starter.services', [])
       return def.promise;
     },
 
-    createPitcher : function(pitcher) {
+    updateCurrBaseline: function(pitcher,baseline){
+      var def = $q.defer();
+      var data = pitcher;
+      data.currBaseline = baseline;
+      Stamplay.Object('pitchers').save(data)
+      .then(function(response) {
+        def.resolve(response);
+      }, function(err) {
+        def.reject(err);
+      })
+      return def.promise;
+    },
+
+    createPitcher: function(pitcher) {
       var def = $q.defer();
       
       // Get team from logged user and set that ID to pitcher.team
@@ -159,9 +173,11 @@ angular.module('starter.services', [])
           else
             def.resolve(response);
         }else{
+          console.log('no data found in PitcherService.getPitchers',response);
           def.reject('no data found');
         }
       }, function(err) {
+        console.log('ERROR in PitcherService.getPitchers',response);
         def.reject(err);
       })
       return def.promise;
