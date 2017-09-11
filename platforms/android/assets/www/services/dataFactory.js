@@ -1,9 +1,9 @@
 (function(gScope){
 
 angular.module(gScope.AppNameId)
-.factory('dataService', ['$rootScope', '$log', '$localStorage', '$q', init]);
+.factory('dataService', ['$rootScope', '$log', '$localStorage', '$q','$location', init]);
 
-function init($rootScope, $log, $localStorage, $q){
+function init($rootScope, $log, $localStorage, $q, $location){
 
 	/**
 	 * INSTANTIATE PARAMS
@@ -49,45 +49,11 @@ function init($rootScope, $log, $localStorage, $q){
 
 	var service = {};
 
-	service.currentUser = currentUser;
-	service.login = login; 
 	service.getObj = getObj;
 	service.saveObj = saveObj;
 	service.pushPendingToCloud = pushPendingToCloud;
 
 	return service;
-
-	/**
-	 * USER FUNCTIONS
-	 */
-
-	function login(user){
-		// NOTE: user.email & user.password
-		// PROCESS FOR WRITE
-		// 1. get data to be written and save to localStorage
-		// 2. check if Internet connection available
-		if($rootScope.online){
-
-		}
-		// 3. if Yes, save to cloud, then mark as pushed in localStorage
-		// 4. check to see if close to limit, and if so, clear old pull data
-		
-	}
-
-	function currentUser(){
-		// PROCESS FOR READ
-		// 1. Check to see if data exists in localStorage
-		// 2. if Yes, set to return variable, but don't return to $scope yet
-		// 3. check if Internet is available
-		if($rootScope.online){
-			
-		}
-		// 4. if Yes, check for updated data from Stamplay
-		// 5. compare new data with local data
-		// 6. if new data is better then local data, store in localS, then return to $scope
-
-		return this;
-	}
 
 	/**
 	 * GET
@@ -99,7 +65,7 @@ function init($rootScope, $log, $localStorage, $q){
 		console.log('DATASERVICE -> getObj(), query: ',query,' objName: ',objName);
 		
 		// 1. Check to see if data exists in localStorage
-		
+// ??? does the try actually catch an error?		
 		try{
 			var localData = _queryLocal('perm',objName,query);
 			if(localData instanceof Error){
@@ -113,7 +79,7 @@ function init($rootScope, $log, $localStorage, $q){
 		}
 
 		// 2. if Yes, set to return variable, but don't return to $scope yet
-		// NOTE: returnData could be false, if no data found locally, but it 
+		// NOTE: returnData will be false if no data found locally, but it 
 		// doesn't matter as it is a valid value to send back to the service, 
 		// and will be resolved below
 		
@@ -139,36 +105,39 @@ function init($rootScope, $log, $localStorage, $q){
 					_saveToLocalPerm(objName,response,true);
 				}else{
 					console.log('DATASERVICE -> getObj(), return == true // going through result line by line to add to perm');
-					// go through each record from Stamplay
-					var i; // for()
-					var j; // for()
+					
+					// set up variables for loop below
+					var i; // counter in parent for() loop
+					var j; // counter in child for() loop
 					var c; // the current response record
 					var l; // the corresponding localStorage record
 					var found; // flag - whether a match or not
 
-					for(i=0; i <= response.length; i++){
+					// go through each record from Stamplay
+					for(i=0; i < response.length; i++){
 						found = false;
 						c = response[i];
 					// find the corresponding record in localStorage.perm with _id
-						l = _findInLocal('perm',c._id);
-
-// WHAT IF THE RESULT FROM STAMPLAY IS A NEWER (DIFFERENT) RECORD THEN WHAT'S IN
-// LOCALSTORAGE.PERM??
-						if(!l){
+						l = _compareToLocal('perm',objName,c);
+						if(l == false){
 							// if any Stamplay records left over, add to localStorage.perm
 							// cause they would have originated off-device (admin panel)
 							_saveToLocalPerm(objName,c,false);
 							returnData.push(c);
-						}else{
-							returnData.push(l);
 						}
+
 					}
+					console.log('DATASERVICE -> getObj() // DONE going through each, returnData',returnData);
 					// check for records in localStorage.temp, append to returnData
-					if($localStorage.temp[objName].length > 0){
-						$localStorage.temp[objName].map(function(e){
-							returnData.push(e);
+					var tempRecords = $localStorage.temp[objName];
+					console.log('DATASERVICE -> getObj() // going through localStorage.temp for '+objName,tempRecords);
+					if(tempRecords.length > 0){
+						tempRecords.map(function(e){
+							if(e)
+								returnData.push(e);
 						});
 					}
+					console.log('DATASERVICE -> getObj() // DONE pushing temp records, returnData',returnData);
 				}
 
 			 // ---------------------------
@@ -189,11 +158,19 @@ function init($rootScope, $log, $localStorage, $q){
 	 }
 
 	/**
-	 * SAVE
+	 * SAVE 
 	 */
 
 	function saveObj(objName,tempData){ // PROCESS FOR WRITE
-		
+
+		// check for errors
+		if(!tempData){
+			$rootScope.$broadcast('doneSavingData');
+			return false;
+		}
+
+		var p = $q.defer();
+
 		var data = [];
 		if(!$localStorage.temp[objName])
 			$localStorage.temp[objName] = [];
@@ -206,6 +183,7 @@ function init($rootScope, $log, $localStorage, $q){
 		}else{
 			data = tempData;
 		}
+		console.log('DATASERVICE -> saveObj(), data being pushed',data);
 
 		// 1. get data to be written and save to $localStorage.temp
 		// 		add a hash for identification
@@ -215,6 +193,10 @@ function init($rootScope, $log, $localStorage, $q){
 		var promiseArray = [];
 
 		for(var i=0; i < data.length; i++){
+			// remove Stamplay-specific fields
+			data[i] = _cleanStamplayFields(data[i]);
+			data[i] = _cleanStamplayDates(data[i]);
+
 			// sanitize
 			for(var field in data[i]){
 				if(typeof data[i][field] == 'string'){
@@ -232,13 +214,23 @@ function init($rootScope, $log, $localStorage, $q){
 			delete data[i].locTimestamp;
 			
 			// save to localStorage.temp
-			$localStorage.temp[objName].push(data[i]);
-			console.log('DATASERVICE -> saveObj(), pushed to localStorage.temp');
-			
+			if(data[i]){
+				$localStorage.temp[objName].push(data[i]);
+				console.log('DATASERVICE -> saveObj(), pushed to localStorage.temp',data[i]);
+			}
+
 			// check if Internet connection available
 			if($rootScope.online){
 				// save to Stamplay, add promise to array
-				promiseArray.push(Stamplay.Object(objName).save(data[i]));
+				if(data[i]['_id']){
+					var thisId = data[i]['_id'];
+					delete data[i]['_id'];
+					console.log('DATASERVICE -> saveObj(), about to do PUT (.patch) to Stamplay: data,',data[i]);
+					promiseArray.push(Stamplay.Object(objName).patch(thisId,data[i]));
+				}else{
+					console.log('DATASERVICE -> saveObj(), about to do POST (.save) to Stamplay: data,',data[i]);
+					promiseArray.push(Stamplay.Object(objName).save(data[i]));
+				}
 			}
 			
 			console.log('DATASERVICE -> saveObj(), array of promises to Stamplay, length',promiseArray.length);
@@ -249,24 +241,38 @@ function init($rootScope, $log, $localStorage, $q){
 		// that array could be empty if all attempts fail
 		if(promiseArray.length > 0){ 
 			$q.all(promiseArray).then(function(result){
-				console.log('DATASERVICE -> saveObj(), in $q.all');
+				console.log('DATASERVICE -> saveObj(), in $q.all: result',result);
 				var record;
 				var i;
 				var j;
+				var k;
+				var override;
 				for(i in result){
 					// each result should be a record in localStorage.temp
 					// so find that record, and move it to localStorage.perm
-					$localStorage.perm[objName].push(result[i]);
+					override = false;
+					for(k in $localStorage.perm[objName]){
+						if($localStorage.perm[objName][k]['id'] == result[i].id){
+							$localStorage.perm[objName][k] = result[i];
+							override = true;
+						}
+					}
+					if(!override)
+						$localStorage.perm[objName].push(result[i]);
 					for(j in $localStorage.temp[objName]){
 						record = $localStorage.temp[objName][j];
-						if(record.hash === result[i].hash){
-							delete $localStorage.temp[objName][j];
+						if(record && record.hash === result[i].hash){
+							// delete $localStorage.temp[objName][j];
+							$localStorage.temp[objName].splice(j,1);
 						}
 					}
 				}
+				p.resolve(true);
 			});
 		}
 		console.log('DATASERVICE -> saveObj(), FINISHED');
+
+		return p.promise;
 	}
 
 	/**
@@ -274,7 +280,7 @@ function init($rootScope, $log, $localStorage, $q){
 	 */
 	
 	 function pushPendingToCloud(){
-return; 	
+	
 	 	var pending = $localStorage.temp;
 	 	var promiseArray = [];
 
@@ -282,7 +288,15 @@ return;
 	 		// check if Internet connection available
 			if($rootScope.online){
 				// save to Stamplay, add promise to array
-				promiseArray.push(Stamplay.Object(objName).save(data[i]));
+				for(var i in pending[objName]){
+					var data = pending[objName][i];
+					if(!data)
+						// delete pending[objName][i];
+						pending[objName].splice(i,1);
+					else{
+						promiseArray.push(Stamplay.Object(objName).save(data));
+					}
+				}
 			}
 	 	}
 
@@ -297,8 +311,9 @@ return;
 					$localStorage.perm[objName].push(result[i]);
 					for(j in $localStorage.temp[objName]){
 						record = $localStorage.temp[objName][j];
-						if(record.hash === result[i].hash){
-							delete $localStorage.temp[objName][j];
+						if(record && (record.hash === result[i].hash)){
+							// delete $localStorage.temp[objName][j];
+							$localStorage.temp[objName].splice(j,1);
 						}
 					}
 				}
@@ -353,7 +368,7 @@ return;
 			obj = tempDataList[index];
 	 		returnStatus = false;
 	 		for(var field in query){
-				if (obj[field].constructor == Array){
+				if (obj[field] && obj[field].constructor == Array){
 					if(_arraysEqual(obj[field],query[field]))
 						returnStatus = true;
 				}else{
@@ -387,19 +402,24 @@ return;
 		}
 	}
 
-	function _findInLocal(storage,id){
-		// storage == 'perm' || storage == 'temp'
-		// !!!!! need to go through queried localStorage records, not all records
-		for(j=0;j <= $localStorage.perm[objName].length; j++){
-			l = $localStorage.perm[objName][j];
-			if(c.id == l.id){
-				// if Stamplay[objName].dt_update is newer then 
-				// localStorage.perm[objName].dt_update, replace localStorage
-				// record with record from Stamplay
-				if(c.dt_update > l.dt_update)
-					l = angular.copy(c);
-				found = true;
+	function _compareToLocal(storage,objName,c){
+		if(!c)
+			return false;
+		var ret = false;
+		var l;
+		if($localStorage.perm[objName].length > 0){
+			for(i=0;i < $localStorage.perm[objName].length; i++){
+				l = $localStorage[storage][objName][i];
+				if(c.id == l.id){
+					if(c.dt_update > l.dt_update)
+						ret = angular.copy(c);
+					else
+						ret = l;
+				}
 			}
+			return ret; // if there is no match above, ret == false
+		}else{
+			return ret; // ret == false 
 		}
 	}
 
@@ -431,6 +451,28 @@ return;
 		}
 		return true;
 	}
+
+	function _cleanStamplayFields(data){
+		// remove Stamplay-specific fields
+		if(data.appId) 		delete data.appId;
+		if(data.cobjectId) 	delete data.cobjectId;
+		if(data.actions) 	delete data.actions;
+		if(data.__v) 		delete data.__v;
+		if(data.$$hashKey) 	delete data.$$hashKey;
+
+		if(data.id)			var id = data.id;
+		delete data.id;
+		if(!data._id || data._id != id)	data._id = id;
+
+		return data;
+	}
+
+	function _cleanStamplayDates(data){
+		if(data.dt_update) delete data.dt_update;
+		if(data.dt_create) delete data.dt_create;
+		return data;
+	}
+
 }
 
 })(this);

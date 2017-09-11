@@ -7,7 +7,7 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 
 	$scope.pitcher = $rootScope.chosenPitcher;
 	
-
+console.log('about to init() in homeController');
 	// PULL
 
 	$scope.pullCounter = 1;
@@ -72,6 +72,9 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 
 		bluetoothService.stop();
 
+		$scope.streaming = false;
+		$scope.doingPull = false;
+
 		var tempMainValue = 0;
 		
 		$scope.currPulls[$scope.pullCounter].rawData = $scope.data;
@@ -79,13 +82,11 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 
 		console.log('in acceptOrReject(), $scope.dataToSave',$scope.data);
 		$scope.data.map(function(e){
-console.log('in $scope.data.map: e',e);
 			if(e.y > tempMainValue){
-console.log('updating tempMainValue',tempMainValue);
 				tempMainValue = e.y;
 			}
 		});
-console.log('tempMainValue',tempMainValue);
+
 		$scope.currPulls[$scope.pullCounter].mainValue = tempMainValue;
 		
 		// GET ACCEPT OR REJECT FROM USER
@@ -96,6 +97,8 @@ console.log('tempMainValue',tempMainValue);
 	$scope.acceptOrReject = function(choice){
 
 		if(choice == 'accept'){
+
+			// SharedState.turnOff('acceptPullModal');
 			
 			if($scope.pullCounter == 1){
 
@@ -106,8 +109,12 @@ console.log('tempMainValue',tempMainValue);
 			else if($scope.pullCounter == 2){
 
 				// check whether to do a pull 3
-				if(twoPullsOk()){
+				var goAhead = twoPullsOk();
+console.log('goAhead in 2nd pull');
+				if(goAhead){
 
+					$scope.currPulls.mainValue = ( $scope.currPulls['1'].mainValue + $scope.currPulls['2'].mainValue ) / 2;
+console.log('$scope.currPulls.mainValue',$scope.currPulls.mainValue);
 					var data = {
 						mainValue: $scope.currPulls.mainValue,
 						note: '',
@@ -116,9 +123,9 @@ console.log('tempMainValue',tempMainValue);
 					};
 					PulldataService.save(data);
 					
-					$scope.currPulls.mainValue = ( $scope.currPulls['1'].mainValue + $scope.currPulls['2'].mainValue ) / 2;
 					updateBaseline($scope.currPulls.mainValue);
 					$scope.donePulling = true;
+					disconnect();
 				
 				}else{
 				
@@ -131,6 +138,8 @@ console.log('tempMainValue',tempMainValue);
 			}else if($scope.pullCounter == 3){
 
 				// data is the $scope.currPulls object, convert to stamplay field
+				$scope.currPulls.mainValue = getAvgOfThreePulls();
+console.log('$scope.currPulls.mainValue',$scope.currPulls.mainValue);
 				var data = {
 					mainValue: $scope.currPulls.mainValue,
 					note: '',
@@ -138,9 +147,9 @@ console.log('tempMainValue',tempMainValue);
 					pitcher: $rootScope.chosenPitcher.id
 				};
 				PulldataService.save(data);
-				$scope.currPulls.mainValue = getAvgOfThreePulls();
 				updateBaseline($scope.currPulls.mainValue);
 				$scope.donePulling = true;
+				disconnect();
 			
 			}
 		
@@ -148,9 +157,6 @@ console.log('tempMainValue',tempMainValue);
 		
 		// clear out the data to prepare for the next pull
 		$scope.data = [];
-
-		$scope.streaming = false;
-		$scope.doingPull = false;
 
 		SharedState.turnOff('acceptPullModal');
 
@@ -192,17 +198,26 @@ console.log('tempMainValue',tempMainValue);
 		var choice = diff2 < diff1 ? 2 : (diff3 < diff1 ? 3 : 1);
 
 		// get average of the two pulls with the least difference
+		var val1, val2, endVal;
 		switch(choice){
 			case 1:
-				return ($scope.currPulls['1'].mainValue + $scope.currPulls['2']) / 2;
+				val1 = $scope.currPulls['1'].mainValue;
+				val2 = $scope.currPulls['2'].mainValue;
+				endVal = (val1 + val2) / 2;
 				break;
 			case 2:
-				return ($scope.currPulls['2'].mainValue + $scope.currPulls['3']) / 2;
+				val1 = $scope.currPulls['2'].mainValue;
+				val2 = $scope.currPulls['3'].mainValue;
+				endVal = (val1 + val2) / 2;
 				break;
 			case 3: 
-				return ($scope.currPulls['1'].mainValue + $scope.currPulls['3']) / 2;
+				val1 = $scope.currPulls['1'].mainValue;
+				val2 = $scope.currPulls['3'].mainValue;
+				endVal = (val1 + val2) / 2;
 				break;
 		}
+// console.log('val1',val1,'val2',val2,'endVal',endVal);
+		return endVal;
 
 	}
 
@@ -242,8 +257,9 @@ console.log('tempMainValue',tempMainValue);
 	}
 
 	function updateBaseline(value){
+		var pitcher = $rootScope.chosenPitcher;
 		if($rootScope.currBaseline == 0)
-			$rootScope.currBaseline = $scope.currPulls.mainValue;
+			$rootScope.currBaseline = value;
 		// save in database
 		PitcherService.updateCurrBaseline(pitcher,value).then(function(result){
 console.log('updated baseline in Pitcher data obj in Stamplay: result',result);
@@ -316,20 +332,32 @@ console.log('updated baseline in Pitcher data obj in Stamplay: result',result);
 	}
 
 	function dataHandler(dataPoint){
-console.log('dataPoint',dataPoint);
-		var temp = dataPoint.split('|');
-		var reading = parseFloat(temp[1].toString());
-		var load = parseFloat(temp[3].toString());
-console.log('reading',reading,'load',load);
 
-		var r = {};
-        r.x = new Date().getTime() / 1000 - startTime;
-        r.y = load;
-    	
-    	$scope.data.push(r);
-    	$scope.rawSensorData.push(dataPoint);
-    	
-    	plot();
+//console.log('dataPoint',dataPoint);
+
+		if(dataPoint != 'undefined'){
+
+			var temp = dataPoint.split('|');
+			var reading = parseFloat(temp[1].toString());
+			var load = parseFloat(temp[3].toString());
+
+			var r = {};
+
+			if(!startTime)
+				startTime = new Date().getTime() / 1000;
+
+	        r.x = new Date().getTime() / 1000 - startTime;
+	        r.y = load;
+	    	
+	    	$scope.data.push(r);
+	    	$scope.rawSensorData.push(dataPoint);
+	    	
+	    	if($scope.doingPull == true)
+	    		plot();
+
+    	}else{
+    	 	// placeholder for future code
+    	}
 	}
 
 	function plot(){

@@ -17,12 +17,10 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 	$rootScope.pitchers = [];
 	$rootScope.currLastPull;
 	$rootScope.currBaseline;
-
 	$rootScope.online = false;
-
 	$rootScope.connected = false; // for Bluetooth connection
-
 	$rootScope.loadingOverlayText = '';
+	$rootScope.loginError = '';
 
 	/**
 	 * INITIALIZE MODALS
@@ -38,6 +36,7 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
     SharedState.initialize($scope, 'areYouDoneModal');
     SharedState.initialize($scope, 'loadingOverlay');
     SharedState.initialize($scope, 'bluetoothNotConnecting');
+    SharedState.initialize($scope, 'savingData');
 
     /**
      * FUNCTIONS FOR TEMPLATES
@@ -60,6 +59,9 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 
 	$scope.$on(fhsCordova.OFFLINE, offline);
 	$scope.$on(fhsCordova.ONLINE, online);
+
+	$rootScope.$on('savingData', savingData);
+	$rootScope.$on('doneSavingData', doneSavingData);
 
 	/**
      * CHECK TO SEE IF DEVICE ONLINE OR NOT
@@ -136,6 +138,18 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 			dataService.pushPendingToCloud();
 
 		}
+	}
+
+	function savingData(event){
+		$log.debug('saving data, turning on overlay');
+		console.log('saving data ---- overlay ON');
+		SharedState.turnOn('savingData');
+	}
+
+	function doneSavingData(event){
+		$log.debug('done saving data, turning off overlay');
+		console.log('done saving data ---- overlay OFF');
+		SharedState.turnOff('savingData');
 	}
 
 

@@ -2,7 +2,7 @@
  <div class="scrollable-content section" >
     <legend>Pitcher List <a href="/pitcher/add" class="btn btn-primary pull-right"><i class="fa fa-plus"></i></a></legend>
     <ul class="list-group">
-      <li class="list-group-item" ng-repeat="p in pitchers" >
+      <li class="list-group-item" ng-repeat="p in pitchers track by $index" >
         <!-- <div class="btn-group pull-right">
         <a ui-turn-on="myDropdown{{p._id}}" class="btn" style="padding-top: 0;">
           <i class="fa fa-ellipsis-v"></i>

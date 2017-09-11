@@ -1,0 +1,50 @@
+APP TO DO's
+
+test the function to upload pending data when internet connection becomes available
+	
+	turn off internet
+	do a pull
+	check stamplay
+	turn on internet
+	check stamplay
+
+finish the saveObj functionality (check that services that use it work correctly)
+
+seems to be an issue with saving main mainValue to Stamplay (it shows as 0; maybe a rounding up in view?)
+
+	code is @ /pages/home/homeController.js:81
+	do a pull, add console.log's, see what happens
+
+need to update $rootScope.currBaseline once a pull is complete
+
+	finish & test function "updateBaseline" in homeController
+
+issue with Run button after hitting Done
+	
+	pages/home/home.html:33 (the ng-show has 2 vars, one is set wrong)
+
+add a "Loading" spinner on right side pitchers slide-out (and a Reload button? and a Add button?)
+
+add a "SAVING" modal (spinner?) when done with pulls, then automically disconnect, no need to push button (or push it so they have time to see results?)
+
+shorten the unique id for pitchers (see function that Steve put in)
+
+make sure the sanitize function in DataService.save() is ok
+
+unit tests
+
+get instructions text from Damian
+
+
+
+ADMIN APP TO DO'S
+
+the big chart to anyalyze a pitcher's data
+
+hide the pulls field in Pitching_Data model; Damian doesn't want to see raw data
+
+
+
+TEAM APP TO DO'S
+
+interceptor for team doesn't work (permanent filter so login only shows team info)

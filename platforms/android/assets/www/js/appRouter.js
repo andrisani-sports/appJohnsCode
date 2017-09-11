@@ -9,8 +9,28 @@ var app = angular.module(gScope.AppNameId, [
   'ngDomEvents'
 ]);
 
-app.config(['$routeProvider', '$logProvider', '$locationProvider', 
-function($routeProvider, $logProvider,$locationProvider){
+app.config(['$routeProvider', '$logProvider', '$locationProvider', '$provide',
+function($routeProvider, $logProvider,$locationProvider, $provide){
+
+  // $provide.decorator("$rootScope", function($delegate) {
+  //   var Scope = $delegate.constructor;
+  //   var origBroadcast = Scope.prototype.$broadcast;
+  //   var origEmit = Scope.prototype.$emit;
+
+  //   Scope.prototype.$broadcast = function() {
+  //     console.log("$broadcast was called on --" + arguments[0] + "-- with arguments:",
+  //                        arguments);
+  //     return origBroadcast.apply(this, arguments);
+  //   };
+  //   Scope.prototype.$emit = function() {
+  //     console.log("$emit was called on --" + arguments[0] + "-- with arguments:",
+  //                        arguments);
+  //     return origEmit.apply(this, arguments);
+  //   };
+  //   return $delegate;
+  // });
+
+  ////////////////////////////////////////////////////
 
   var path = ''; // android_asset/www/
 
@@ -55,6 +75,11 @@ function($routeProvider, $logProvider,$locationProvider){
         templateUrl: path + 'pages/pitchers/editPitcher.html',
         controller: 'pitchersController',
         conterollerAs: 'pitchers',
+    })
+    .when('/bluetooth/setup/', {
+      templateUrl: path + 'pages/bluetooth/setupBluetooth.html',
+      controller: 'bluetoothController',
+      controllerAs: 'bt'
     })
   	.otherwise({redirectTo: '/splash'});
 

@@ -21,7 +21,8 @@ function init($rootScope, $log){
 	 function makeChart(targetDiv, clickHandler, options){
 	 	if(typeof options === 'undefined'){
 	 		var options = {
-		 		// high: 130,
+		 		high: 70,
+		 		low: 0,
 		 		width: '600px',
 	  			height: '300px',
 	  			axisX: {
@@ -51,8 +52,10 @@ function init($rootScope, $log){
 
 	function setData(targetDiv, data, iSeries){
 	    if(!iSeries) iSeries = 0;
-	    charts[targetDiv].data.series[iSeries] = data;
-	    charts[targetDiv].update();
+		if(charts[targetDiv]){
+	    	charts[targetDiv].data.series[iSeries] = data;
+	    	charts[targetDiv].update();
+	    }
 	}
 
 	function addData(targetDiv, data, series){

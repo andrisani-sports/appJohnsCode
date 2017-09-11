@@ -1,0 +1,26 @@
+<div class="modal" ui-if="acceptPullModal" ui-state='acceptPullModal'>
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button class="close" ui-turn-off="acceptPullModal"><i class="fa fa-close"></i></button> -->
+        <h4 class="modal-title">Accept? Reject?</h4>
+      </div>
+      <div class="modal-body">
+        
+        <h1>BASELINE: {{currBaseline}}</h1>
+        
+        <div style="width:100%;" id="ct-chart-final" dom-on-create="acceptModalCreateChart()" class="ct-perfect-fourth"></div>
+
+        <h1>THIS PULL: {{currPulls[pullCounter].mainValue}}</h1>
+
+        <button class="btn btn-primary" ng-click="acceptOrReject('accept')">ACCEPT</button>
+        <button class="btn btn-primary pull-right" ng-click="acceptOrReject('reject')">REJECT</button>
+
+      </div>
+      <div class="modal-footer">
+        <!-- <button ui-turn-off="acceptPullModal" class="btn btn-default">Close</button> -->
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-body -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

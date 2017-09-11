@@ -45,6 +45,10 @@
 
                   <span style="display:block;height:20px;"></span>
 
+                  <!--<a class="list-group-item" href="#bluetooth/setup">Bluetooth Setup <i class="fa fa-chevron-right pull-right"></i></a>
+
+                  <span style="display:block;height:20px;"></span>-->
+
                   <button class="btn btn-primary" ng-click="logout()" style="margin-left:15px;">Log Out</button>
 
                 </div><!-- /.scrollable-content -->
@@ -66,11 +70,11 @@
                     <i class="fa fa-bars"></i> Menu
                   </div>
                 </div>
-                <div class="btn-group pull-right" ui-yield-to="navbarAction">
+                <!--<div class="btn-group pull-right" ui-yield-to="navbarAction">
                   <div ui-toggle="uiSidebarRight" class="btn sidebar-right-toggle">
                     <i class="fa fa-user"></i> Pitchers
                   </div>
-                </div>
+                </div>-->
             </div>
 
             <!-- Bottom Navbar -->
@@ -104,6 +108,7 @@
                             <div ng-include="'pages/modals/doThirdPullModal.html'"></div>
                             <div ng-include="'pages/modals/loadingOverlay.html'"></div>
                             <div ng-include="'pages/modals/bluetoothNotConnecting.html'"></div>
+                            <div ng-include="'pages/modals/savingModal.html'"></div>
                             <div ng-include="'pages/modals/areYouDone.html'"></div>
                         </div><!-- ui-content-for=modals -->
                     </div><!-- #view_root -->

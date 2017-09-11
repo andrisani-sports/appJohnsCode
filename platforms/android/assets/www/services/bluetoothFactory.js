@@ -18,8 +18,8 @@ function init($rootScope, $log, $q){
 	var V2_5 = 1;
 	var	V1_25 = 0;
 	var _VRef = V2_5;	
-	// var MAC_ADDRESS = "00:06:66:0A:32:9D";
-	var MAC_ADDRESS = "20:16:12:12:67:08"; // the new Arduino BT board
+	// var MAC_ADDRESS = "00:06:66:0A:32:9D"; // 20-16-12-12-78-98
+	var MAC_ADDRESS = "20:16:12:12:78:98"; // the new Arduino BT board
 
 	var READ 			= getReadAnlogCommand(analogPorts[0],analogPorts[6]);   //read analog command code
 	var IDENTIFY 		= '>' + checksum("i"); 									//identify command code

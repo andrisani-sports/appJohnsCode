@@ -53,6 +53,10 @@ angular.module('starter.services', [])
       })
     },
 
+    // login: function(user){
+    //   dataService.login(user);
+    // },
+
     currentUser: currentUser
 
   } // end return{}
@@ -76,15 +80,19 @@ angular.module('starter.services', [])
 
     getMostRecentPullValue: function(pitcher){
       var id = pitcher.id;
-      return Stamplay.Object('pitching_data')
-      .get({pitcher: id})
+      var def = $q.defer();
+
+      // return Stamplay.Object('pitching_data').get({pitcher: id})
+      dataService.getObj('pitching_data',{pitcher: id})
       .then(function(result){
-        if(result.length > 0){
-          return result.data[0].mainValue;
+        if(result.data && result.data.length > 0){
+          def.resolve(result.data[0].mainValue);
         }else{
-          return 0;
+          def.resolve(0);
         }
       });
+
+      return def.promise;
     },
 
     getCurrBaseline: function(pitcher){
@@ -103,9 +111,13 @@ angular.module('starter.services', [])
 
     updateCurrBaseline: function(pitcher,baseline){
       var def = $q.defer();
-      var data = pitcher;
-      data.currBaseline = baseline;
-      Stamplay.Object('pitchers').save(data)
+      var data = {
+        id: pitcher.id,
+      }
+      data.baselines = [];
+      data.baselines.push({value: baseline});
+      // Stamplay.Object('pitchers').save(data)
+      dataService.saveObj('pitchers',data)
       .then(function(response) {
         def.resolve(response);
       }, function(err) {
@@ -143,11 +155,10 @@ angular.module('starter.services', [])
         team: pitcherTeam
       }
 
-      Stamplay.Object('pitchers').save(data)
+      // Stamplay.Object('pitchers').save(data)
+      dataService.saveObj('pitchers',data)
       .then(function(response) {
-
         console.log('New pitcher created', response);
-
         def.resolve(response);
       }, function(err) {
         def.reject(err);
@@ -159,6 +170,8 @@ angular.module('starter.services', [])
       var def = $q.defer();
       var team = [];
       var teamId = window.localStorage['userTeam'];
+      if(typeof teamId == 'undefined')
+        return 'ERROR: teamId not found in localStorage';
       team.push(teamId);
 
       console.log('teamId,team in PitcherService.getPitchers',teamId,team);
@@ -177,7 +190,7 @@ angular.module('starter.services', [])
           def.reject('no data found');
         }
       }, function(err) {
-        console.log('ERROR in PitcherService.getPitchers',response);
+        console.log('ERROR in PitcherService.getPitchers',err);
         def.reject(err);
       })
       return def.promise;
@@ -186,9 +199,14 @@ angular.module('starter.services', [])
     getPitcher : function(id) {
       var def = $q.defer();
 
-      Stamplay.Object('pitchers').get({ _id : id})
+      //Stamplay.Object('pitchers').get({ _id : id})
+      dataService.getObj('pitchers',{ _id : id})
       .then(function(response) {
-        def.resolve(response.data);
+        if(response.data)
+          response = response.data;
+        if(response.length > 0)
+          response = response[0];
+        def.resolve(response);
       }, function(err) {
         def.reject(err);
       })
@@ -197,9 +215,12 @@ angular.module('starter.services', [])
 
     updatePitcher : function(pitcher) {
       var def = $q.defer();
-
+      var currId = pitcher.id ? pitcher.id : pitcher._id;
       var data = {
+        id: currId,
+        _id: currId,
         name: pitcher.name,
+        jersey_number: pitcher.jersey_number,
         age: pitcher.age,
         height : pitcher.height,
         weight : pitcher.weight,
@@ -207,7 +228,8 @@ angular.module('starter.services', [])
         device_height : pitcher.device_height
       }
 
-      Stamplay.Object('pitchers').update(pitcher._id, data)
+      // Stamplay.Object('pitchers').update(pitcher._id, data)
+      dataService.saveObj('pitchers',data)
       .then(function(response) {
         def.resolve(response);
       }, function(err) {

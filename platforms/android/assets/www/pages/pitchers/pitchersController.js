@@ -17,24 +17,25 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 		
 		// get pitcher by $routeParams.id
 		PitcherService.getPitcher(id).then(function(result){
-			$scope.pitcher = result[0];
+			$scope.pitcher = result;
 		});
 
 	}
 
 	// create pitcher
 	$scope.createPitcher = function(pitcher) {
+		$rootScope.$broadcast('savingData');
 		PitcherService.createPitcher(pitcher).then(function(result){
-			$location.path('/');	
-			// Need to figure out how to update the pitchers sidebar when a new pitcher is created $scope.apply around push to pitchers array
-			// console.log('new pitcher created', result);
-			// $scope.pitchers.push(result);
+			$rootScope.$broadcast('doneSavingData');
+			$location.path('/home');
 		});
 	}
 
 	// update pitcher
 	$scope.updatePitcher = function(pitcher) {
+		$rootScope.$broadcast('savingData');
 		PitcherService.updatePitcher(pitcher).then(function(result){
+			$rootScope.$broadcast('doneSavingData');
 			$location.path('/pitchers');	
 		});
 	}
