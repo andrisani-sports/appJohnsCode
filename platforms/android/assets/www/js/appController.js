@@ -5,6 +5,8 @@ angular
 .controller('AppController', ['$log', '$scope','fhsCordova','$rootScope', 'SharedState', 'AccountService', '$localStorage', 'dataService',
 function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $localStorage, dataService){
 
+	console.log('====STARTING APP CONTROLLER====');
+
 	/**
 	 * SETUP VARIABLES FOR TEMPLATES
 	 */
@@ -36,7 +38,7 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
     SharedState.initialize($scope, 'areYouDoneModal');
     SharedState.initialize($scope, 'loadingOverlay');
     SharedState.initialize($scope, 'bluetoothNotConnecting');
-    SharedState.initialize($scope, 'savingData');
+	SharedState.initialize($scope, 'savingData');
 
     /**
      * FUNCTIONS FOR TEMPLATES

@@ -1,25 +1,31 @@
 (function(gScope){
 	
 angular.module(gScope.AppNameId)
-	.controller('pitchersController', ['$scope', '$rootScope', '$log', '$location', '$routeParams', 'chartService', 'bluetoothService', 'PitcherService', init]);
+	.controller('pitchersController', ['$scope', '$rootScope', '$log', '$location', '$routeParams', 'chartService', 'PitcherService', init]);
 
-function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoothService,PitcherService){
+function init($scope, $rootScope, $log, $location, $routeParams, chartService, PitcherService){
 
 	console.log('init pitchersController...');
 
-	PitcherService.getPitchers().then(function(result){
-		$rootScope.pitchers = result;
-	});
+	$scope.getPitchers = function(){
+		console.log('init pitchersController...');
 
-	if ($routeParams.id) {
-		// set id from $routeParams
-		var id = $routeParams.id;
-		
-		// get pitcher by $routeParams.id
-		PitcherService.getPitcher(id).then(function(result){
-			$scope.pitcher = result;
+		PitcherService.getPitchers()
+		.then(function(result){ 
+console.log('in pitchersController.getPitchers(), result',result);
+			$scope.pitchers = result;
 		});
 
+		if ($routeParams.id) {
+			// set id from $routeParams
+			var id = $routeParams.id;
+			
+			// get pitcher by $routeParams.id
+			PitcherService.getPitcher(id).then(function(result){
+				$scope.pitcher = result;
+			});
+
+		}
 	}
 
 	// create pitcher
@@ -63,6 +69,16 @@ function init($scope,$rootScope,$log,$location,$routeParams,chartService,bluetoo
 				$location.path('/home');
 				// sidebar is closed by the ui-turn-off='uiSidebarRight' attrib in right_sidebar.html
 			});
+		});
+	}
+
+	$scope.getPitcherData = function(pitcher){
+		PitcherService.getPitchersData(pitcher)
+		.then(function(result){
+			$rootScope.currPitchersData = result;
+		})
+		.catch(function(err){
+			console.log('err',err);
 		});
 	}
 

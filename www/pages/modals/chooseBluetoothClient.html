@@ -1,0 +1,25 @@
+<div class="modal" ui-if="chooseBluetoothClient" ui-shared-state='chooseBluetoothClient'>
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" ui-turn-off="chooseBluetoothClient"><i class="fa fa-close"></i></button>
+        <h4 class="modal-title">Choose Bluetooth Device</h4>
+      </div>
+      <div class="modal-body">
+        <div class="scrollable">
+            <div class="scrollable-content section">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="b in bluetoothDevices" >
+                        <span ng-click="chooseBluetooth(b)" class="pull-right" style="width:85%;display:inline-block">{{b.name}}</span>
+                    </li><!-- /.list-group-item -->
+                </ul><!-- /.list-group -->
+            </div><!-- /.scrollable-content -->
+        </div><!-- /.scrollable -->
+      </div>
+      <div class="modal-footer">
+        <button ui-turn-off="chooseBluetoothClient" class="btn btn-default">Close</button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-body -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

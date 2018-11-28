@@ -1,0 +1,11 @@
+<div class="scrollable">
+ <div class="scrollable-content section">
+		<legend>Pitcher Data: {{currPitcher.name}}</legend>
+		<p>---{{currPitchersData}}</p>
+		<ul class="list-group">
+		  <li class="list-group-item" ng-repeat="d in currPitchersData track by $index" >
+		  	<span style="width:85%;display:inline-block">{{d.mainValue}}</span>
+		  </li><!-- /.list-group-item -->
+		</ul><!-- /.list-group -->
+	</div><!-- /.scrollable-content -->
+</div><!-- /.scrollable -->

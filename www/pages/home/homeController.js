@@ -7,7 +7,8 @@ function init($rootScope,$scope,$log,chartService,bluetoothService,AccountServic
 
 	$scope.pitcher = $rootScope.chosenPitcher;
 	
-console.log('about to init() in homeController');
+	console.log('homeController.js');
+	
 	// PULL
 
 	$scope.pullCounter = 1;
@@ -39,7 +40,7 @@ console.log('about to init() in homeController');
 	 * BLUETOOTH
 	 */
 
-	bluetoothService.getUnpaired();
+	// bluetoothService.getUnpaired();
 
 	$scope.connected = false;
 	$scope.connecting = false;
@@ -137,7 +138,7 @@ console.log('$scope.currPulls.mainValue',$scope.currPulls.mainValue);
 			
 			}else if($scope.pullCounter == 3){
 
-				// data is the $scope.currPulls object, convert to stamplay field
+				// data is the $scope.currPulls object, convert to ??
 				$scope.currPulls.mainValue = getAvgOfThreePulls();
 console.log('$scope.currPulls.mainValue',$scope.currPulls.mainValue);
 				var data = {
@@ -262,7 +263,7 @@ console.log('$scope.currPulls.mainValue',$scope.currPulls.mainValue);
 			$rootScope.currBaseline = value;
 		// save in database
 		PitcherService.updateCurrBaseline(pitcher,value).then(function(result){
-console.log('updated baseline in Pitcher data obj in Stamplay: result',result);
+console.log('updated baseline in Pitcher data obj: result',result);
 		});
 	}
 
@@ -275,6 +276,10 @@ console.log('updated baseline in Pitcher data obj in Stamplay: result',result);
 		if($scope.chosenPitcher.name == ''){
 			// need to choose a pitcher first
 			SharedState.turnOn('choosePitcher');
+			return false;
+		}
+		if($scope.connected == false){
+			SharedState.turnOn('chooseBluetoothClient');
 			return false;
 		}
 		$scope.connecting = true;

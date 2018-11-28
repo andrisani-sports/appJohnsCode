@@ -5,32 +5,13 @@ var app = angular.module(gScope.AppNameId, [
   'ngRoute',
   'mobile-angular-ui',
   'starter.services',
+  'services.pitcher',
   'ngStorage',
   'ngDomEvents'
 ]);
 
 app.config(['$routeProvider', '$logProvider', '$locationProvider', '$provide',
-function($routeProvider, $logProvider,$locationProvider, $provide){
-
-  // $provide.decorator("$rootScope", function($delegate) {
-  //   var Scope = $delegate.constructor;
-  //   var origBroadcast = Scope.prototype.$broadcast;
-  //   var origEmit = Scope.prototype.$emit;
-
-  //   Scope.prototype.$broadcast = function() {
-  //     console.log("$broadcast was called on --" + arguments[0] + "-- with arguments:",
-  //                        arguments);
-  //     return origBroadcast.apply(this, arguments);
-  //   };
-  //   Scope.prototype.$emit = function() {
-  //     console.log("$emit was called on --" + arguments[0] + "-- with arguments:",
-  //                        arguments);
-  //     return origEmit.apply(this, arguments);
-  //   };
-  //   return $delegate;
-  // });
-
-  ////////////////////////////////////////////////////
+function($routeProvider, $logProvider, $locationProvider, $provide){
 
   var path = ''; // android_asset/www/
 
@@ -43,7 +24,6 @@ function($routeProvider, $logProvider,$locationProvider, $provide){
   			templateUrl: path + 'pages/home/home.html',
   			controller: 'homeController',
   			controllerAs: 'home'
-        // resolve: checkUserStatus
   	})
     .when('/login', {
       templateUrl: path + 'pages/login/loginTemplate.html',
@@ -53,28 +33,32 @@ function($routeProvider, $logProvider,$locationProvider, $provide){
     .when('/splash', {
         templateUrl: path + 'pages/splash/splash.html',
         controller: 'splashController',
-        conterollerAs: 'splash',
-        // resolve: checkUserStatus
+        controllerAs: 'splash',
     })
     .when('/pitchers', {
         templateUrl: 'pages/pitchers/listPitchers.html',
         controller: 'pitchersController',
-        conterollerAs: 'pitchers',
+        controllerAs: 'pitchers'
     })
     .when('/pitcher/add', {
         templateUrl: 'pages/pitchers/addPitcher.html',
         controller: 'pitchersController',
-        conterollerAs: 'pitchers',
+        controllerAs: 'pitchers',
     })
     .when('/pitcher/:id', {
         templateUrl: path + 'pages/pitchers/viewPitcher.html',
         controller: 'pitchersController',
-        conterollerAs: 'pitchers',
+        controllerAs: 'pitchers',
     })
     .when('/pitcher/edit/:id', {
         templateUrl: path + 'pages/pitchers/editPitcher.html',
         controller: 'pitchersController',
-        conterollerAs: 'pitchers',
+        controllerAs: 'pitchers',
+    })
+    .when('/pitcher/data/:id', {
+        templateUrl: path + 'pages/pitchers/pitcherData.html',
+        controller: 'pitchersController',
+        controllerAs: 'pitchers',
     })
     .when('/bluetooth/setup/', {
       templateUrl: path + 'pages/bluetooth/setupBluetooth.html',
@@ -83,17 +67,10 @@ function($routeProvider, $logProvider,$locationProvider, $provide){
     })
   	.otherwise({redirectTo: '/splash'});
 
-    // use the HTML5 History API
-    // $locationProvider.html5Mode({
-    //   enabled: false, 
-    //   requireBase: false,
-    //   rewriteLinks: false 
-    // });
-
 }]);
 
 app.run(function(AccountService,$location,$rootScope){
-
+console.log('appRouter line 119');
   $rootScope.$on('$routeChangeStart', function (event) {
 
     var currPath = $location.path();
@@ -109,6 +86,5 @@ app.run(function(AccountService,$location,$rootScope){
   });
 
 });
-
 
 })(this);

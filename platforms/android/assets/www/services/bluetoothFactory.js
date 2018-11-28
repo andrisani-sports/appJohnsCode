@@ -33,6 +33,7 @@ function init($rootScope, $log, $q){
 	service.start = start;
 	service.stop = stop;
 	service.getUnpaired = getUnpaired;
+	service.setBluetoothClient = setBluetoothClient;
 
 	return service;
 
@@ -47,21 +48,27 @@ function init($rootScope, $log, $q){
 		}, function(){
 			deferred.reject('failed to get list of unpaired');
 		})
+		return deferred.promise;
+	}
+
+	function setBluetoothClient(device){
+		// example: [{ "class": 276, "id": "10:BF:48:CB:00:00", "address": "10:BF:48:CB:00:00", "name": "Nexus 7" }]
+		MAC_ADDRESS = device.address;
 	}
 
 	function connect(){
 		var deferred = $q.defer();
 		bluetoothSerial.connect(MAC_ADDRESS, 
-			function(){
+			function(result){
 				console.log('connected to the NEW device');
 				deferred.resolve('connected to ' + MAC_ADDRESS);
 			},
 
-			function(){
-				console.log('failed to connect');
+			function(err){
+				console.log('failed to connect. ERR:',err);
 				deferred.reject('failed to connect');
 			}
-			);
+		);
 
 		return deferred.promise;
 	}

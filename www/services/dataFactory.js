@@ -1,9 +1,55 @@
 (function(gScope){
 
-angular.module(gScope.AppNameId)
-.factory('dataService', ['$rootScope', '$log', '$localStorage', '$q','$location', init]);
+	console.log('dataFactory line 3');
 
-function init($rootScope, $log, $localStorage, $q, $location){
+angular.module(gScope.AppNameId)
+.factory('dataService', ['$rootScope', '$log', '$localStorage', '$q','$location', '$http', init]);
+
+function init($rootScope, $log, $localStorage, $q, $location, $http){
+
+	/**
+	 * RESTDB FUNCTIONS
+	 */
+	var restdb = {
+		_url: "https://andrisani-7eb3.restdb.io/rest/",
+		_settings: {
+			"async": true,
+			"crossDomain": true,
+			"headers": {
+			  "content-type": "application/json",
+			  "x-apikey": "5bac2705bd79880aab0a778e",
+			  "cache-control": "no-cache"
+			}
+		},
+		get: function(obj,query) { 
+			var settings = angular.copy(this._settings);
+			settings.url = this._url + obj;
+			settings.method = 'GET';
+			
+			return $http(settings);
+		},
+		patch: function(obj,id,data){
+			var settings = angular.copy(this._settings);
+			settings.url = this._url + obj + '/' + id;
+			settings.method =  "PUT";
+			settings.processData = 'false';
+			settings.data = JSON.stringify(data);
+			
+			return $http(settings);
+		},
+		save: function(obj,data){
+			if(typeof data == 'array'){
+				return new Error('Cannot save array to backend');
+			}
+			var settings = angular.copy(this._settings);
+			settings.url = this._url + obj;
+			settings.method = "POST";
+			settings.processData = 'false';
+			settings.data = JSON.stringify(data);
+			
+			return $http(settings);
+		}
+	}
 
 	/**
 	 * INSTANTIATE PARAMS
@@ -20,8 +66,6 @@ function init($rootScope, $log, $localStorage, $q, $location){
 	 * CLOUD PARAMETERS
 	 */
 
-	var $stamplay = angular.copy(Stamplay);
-
 	/**
 	 * SERVICE
 	 */
@@ -35,7 +79,7 @@ function init($rootScope, $log, $localStorage, $q, $location){
 	// 		create a local hash using timestamp and values for each data element
 	// 		save to cloud
 	// 		mark as 'pushedToCloud' in localStorage
-	// 		do a get on the local_hash field in stamplay
+	// 		do a get on the local_hash field in backend
 	// 		if a record exists, mark as 'verified' in localStorage
 	// 4. check to see if close to limit, and if so, clear old pull data
 
@@ -43,7 +87,7 @@ function init($rootScope, $log, $localStorage, $q, $location){
 	// 1. Check to see if data exists in localStorage
 	// 2. if Yes, set to return variable, but don't return to $scope yet
 	// 3. check if Internet is available
-	// 4. if Yes, check for updated data from Stamplay
+	// 4. if Yes, check for updated data from backend
 	// 5. compare new data with local data
 	// 6. if new data is better then local data, store in localS, then return to $scope
 
@@ -52,6 +96,7 @@ function init($rootScope, $log, $localStorage, $q, $location){
 	service.getObj = getObj;
 	service.saveObj = saveObj;
 	service.pushPendingToCloud = pushPendingToCloud;
+	service.login = login;
 
 	return service;
 
@@ -90,13 +135,13 @@ function init($rootScope, $log, $localStorage, $q, $location){
 		
 		if($rootScope.online){
 		
-		// 4. if Yes, check for updated data from Stamplay
+		// 4. if Yes, check for updated data from backend
 		
-			Stamplay.Object(objName).get(query)
+			restdb.get(objName,query)
 			.then(function(response) {
 				if(response.data)
 					response = response.data;
-				console.log('DATASERVICE -> getObj(), Stamplay response',response);
+				console.log('DATASERVICE -> getObj(), db response',response);
 		// 5. compare new data with local data if nothing in localStorage
 				
 				if(returnData == false){
@@ -113,14 +158,14 @@ function init($rootScope, $log, $localStorage, $q, $location){
 					var l; // the corresponding localStorage record
 					var found; // flag - whether a match or not
 
-					// go through each record from Stamplay
+					// go through each record from backend
 					for(i=0; i < response.length; i++){
 						found = false;
 						c = response[i];
 					// find the corresponding record in localStorage.perm with _id
 						l = _compareToLocal('perm',objName,c);
 						if(l == false){
-							// if any Stamplay records left over, add to localStorage.perm
+							// if any db records left over, add to localStorage.perm
 							// cause they would have originated off-device (admin panel)
 							_saveToLocalPerm(objName,c,false);
 							returnData.push(c);
@@ -131,7 +176,7 @@ function init($rootScope, $log, $localStorage, $q, $location){
 					// check for records in localStorage.temp, append to returnData
 					var tempRecords = $localStorage.temp[objName];
 					console.log('DATASERVICE -> getObj() // going through localStorage.temp for '+objName,tempRecords);
-					if(tempRecords.length > 0){
+					if(tempRecords && tempRecords.length > 0){
 						tempRecords.map(function(e){
 							if(e)
 								returnData.push(e);
@@ -188,14 +233,11 @@ function init($rootScope, $log, $localStorage, $q, $location){
 		// 1. get data to be written and save to $localStorage.temp
 		// 		add a hash for identification
 		// 		add a timestamp to help with uniqueness
-		// 		attempt to save to Stamplay (with hash)
+		// 		attempt to save to db backend (with hash)
 
 		var promiseArray = [];
 
 		for(var i=0; i < data.length; i++){
-			// remove Stamplay-specific fields
-			data[i] = _cleanStamplayFields(data[i]);
-			data[i] = _cleanStamplayDates(data[i]);
 
 			// sanitize
 			for(var field in data[i]){
@@ -221,19 +263,19 @@ function init($rootScope, $log, $localStorage, $q, $location){
 
 			// check if Internet connection available
 			if($rootScope.online){
-				// save to Stamplay, add promise to array
+				// save to backend, add promise to array
 				if(data[i]['_id']){
 					var thisId = data[i]['_id'];
 					delete data[i]['_id'];
-					console.log('DATASERVICE -> saveObj(), about to do PUT (.patch) to Stamplay: data,',data[i]);
-					promiseArray.push(Stamplay.Object(objName).patch(thisId,data[i]));
+					console.log('DATASERVICE -> saveObj(), about to do PUT (.patch) to backend: data,',data[i]);
+					promiseArray.push(restdb.patch(objName,thisId,data[i]));
 				}else{
-					console.log('DATASERVICE -> saveObj(), about to do POST (.save) to Stamplay: data,',data[i]);
-					promiseArray.push(Stamplay.Object(objName).save(data[i]));
+					console.log('DATASERVICE -> saveObj(), about to do POST (.save) to backend: data,',data[i]);
+					promiseArray.push(restdb.save(objName,data[i]));
 				}
 			}
 			
-			console.log('DATASERVICE -> saveObj(), array of promises to Stamplay, length',promiseArray.length);
+			console.log('DATASERVICE -> saveObj(), array of promises to backend, length',promiseArray.length);
 
 		}
 
@@ -287,14 +329,14 @@ function init($rootScope, $log, $localStorage, $q, $location){
 	 	for(objName in pending){
 	 		// check if Internet connection available
 			if($rootScope.online){
-				// save to Stamplay, add promise to array
+				// save to backend, add promise to array
 				for(var i in pending[objName]){
 					var data = pending[objName][i];
 					if(!data)
 						// delete pending[objName][i];
 						pending[objName].splice(i,1);
 					else{
-						promiseArray.push(Stamplay.Object(objName).save(data));
+						promiseArray.push(restdb.save(objName,data));
 					}
 				}
 			}
@@ -322,6 +364,20 @@ function init($rootScope, $log, $localStorage, $q, $location){
 
 	 }
 
+	function login(){
+		// ??? (restdb.io)
+		// .then(function(user) {
+		// 	window.localStorage['user'] = JSON.stringify(user);
+		// 	window.localStorage['userTeam'] = user.team;
+		// }, function(error) {
+		// 	errorHandler({
+		// 		title : "<h4 class='center-align'>Incorrect Username or Password</h4>"
+		// 	});
+		// });
+		window.localStorage['user'] = '{ "name": "test pitcher", "_id": "asdf-safdg8-as3h" }';
+		window.localStorage['userTeam'] = '{ "name": "test team", "_id": "hukmh-safdg8-as3h" }';
+		return true;
+	}
 
 	/**
 	 * HELPER (INTERNAL) FUNCTIONS
@@ -450,27 +506,6 @@ function init($rootScope, $log, $localStorage, $q, $location){
 				return false;
 		}
 		return true;
-	}
-
-	function _cleanStamplayFields(data){
-		// remove Stamplay-specific fields
-		if(data.appId) 		delete data.appId;
-		if(data.cobjectId) 	delete data.cobjectId;
-		if(data.actions) 	delete data.actions;
-		if(data.__v) 		delete data.__v;
-		if(data.$$hashKey) 	delete data.$$hashKey;
-
-		if(data.id)			var id = data.id;
-		delete data.id;
-		if(!data._id || data._id != id)	data._id = id;
-
-		return data;
-	}
-
-	function _cleanStamplayDates(data){
-		if(data.dt_update) delete data.dt_update;
-		if(data.dt_create) delete data.dt_create;
-		return data;
 	}
 
 }

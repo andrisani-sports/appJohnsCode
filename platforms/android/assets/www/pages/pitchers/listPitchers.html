@@ -1,6 +1,9 @@
 <div class="scrollable">
  <div class="scrollable-content section">
-		<legend>Pitcher List <a href="#pitcher/add" class="btn btn-primary pull-right"><i class="fa fa-plus"></i></a></legend>
+		<legend>Pitcher List 
+			<button ng-click="getPitchers()" class="btn btn-primary pull-right" style="margin-right:10px;">REFRESH</button>
+			<a href="#pitcher/add" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+		</legend>
 		<ul class="list-group">
 		  <li class="list-group-item" ng-repeat="p in pitchers track by $index" >
 		  	<div class="btn-group pull-right">
@@ -18,6 +21,7 @@
 			    <li><a href="#pitcher/{{p._id}}">Pitcher Profile</a></li>
 			    <li><a href="#pitcher/edit/{{p._id}}">Edit Pitcher</a></li>
 			    <li><a href="" ng-click="choosePitcher(p)">Run Test</a></li>
+			    <li><a href="#pitcher/data/{{p._id}}">See Data</a></li>
 			  </ul>
 			</div>
 		  	<span ng-click="choosePitcher(p)" style="width:85%;display:inline-block">{{p.name}}</span>

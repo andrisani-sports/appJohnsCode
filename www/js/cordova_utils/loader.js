@@ -1,6 +1,8 @@
 //this module is used to bootstrap angular after cordova has loaded.
 (function(gScope){
 
+    console.log('loader.js');
+
      document.addEventListener('DOMContentLoaded', function(){ 
         init();
     }, false);
@@ -11,7 +13,7 @@
         };
 
         var loadPage = function(type){
-            console.log('ready');
+            console.log('loader ready to bootstrap angular');
             gScope.deviceType = type;
           	angular.bootstrap(document.body,[gScope.AppNameId]);
         };

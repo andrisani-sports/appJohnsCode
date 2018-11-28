@@ -33,6 +33,7 @@ function init($rootScope, $log, $q){
 	service.start = start;
 	service.stop = stop;
 	service.getUnpaired = getUnpaired;
+	service.setBluetoothClient = setBluetoothClient;
 
 	return service;
 
@@ -47,6 +48,12 @@ function init($rootScope, $log, $q){
 		}, function(){
 			deferred.reject('failed to get list of unpaired');
 		})
+		return deferred;
+	}
+
+	function setBluetoothClient(device){
+		// example: [{ "class": 276, "id": "10:BF:48:CB:00:00", "address": "10:BF:48:CB:00:00", "name": "Nexus 7" }]
+		MAC_ADDRESS = device.address;
 	}
 
 	function connect(){

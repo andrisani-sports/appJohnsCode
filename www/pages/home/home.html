@@ -3,8 +3,7 @@
 
 	    <div class="section">
 			<legend>Home Page</legend>
-
-			<h3>Current Pitcher: <b>{{ chosenPitcher.name != '' ? chosenPitcher.name : 'Click on MENU, then "Pitcher List" to choose a pitcher' }}</b></h3>
+			<h3>Current Pitcher: <b>{{ chosenPitcher.name != '' ? chosenPitcher.name : 'Click on MENU, then "Pitcher List" to choose a pitcher. Click on MENU, then "Bluetooth Setup" to connect to device.' }}</b></h3>
 		</div>
 
 		<div class="section" style="" ng-if="!connected">
@@ -44,6 +43,13 @@
 
         	<button class="btn btn-primary" ng-click="stopPull()">STOP</button>
 
+		</div>
+
+		<div class="section container">
+			<legend>Recent Pulls</legend>
+			<ul class="list-group">
+				<li class="list-group-item" ng-repeat="pull in allPulls">{{pull.mainValue}}</li>
+			</ul>
 		</div>
 
 	</div><!-- /.scrollable-content -->

@@ -1,14 +1,50 @@
 (function(gScope){
 	
 	angular.module(gScope.AppNameId)
-	.controller('bluetoothController', ['$rootScope','$scope','$log',init]);
+	.controller('bluetoothController', ['$rootScope','$scope','$log','bluetoothService','SharedState',init]);
 
-	function init($rootScope,$scope,$log){
+	function init($rootScope,$scope,$log,bluetoothService,SharedState){
 
-		$scope.chooseBluetooth = function(){
-			
+		console.log('BLUETOOTH CONTROLLER init');
+
+		$scope.bluetoothDevices = [];
+
+		$scope.chooseBluetooth = function(device){
+			// example: [{ "class": 276, "id": "10:BF:48:CB:00:00", "address": "10:BF:48:CB:00:00", "name": "Nexus 7" }]
+			bluetoothService.setBluetoothClient(device);
+			console.log('connecting to bluetooth...');
+			$scope.connecting = true;
+			$rootScope.loadingOverlayText = 'CONNECTING';
+			SharedState.turnOn('loadingOverlay');
+			bluetoothService.connect().then(
+				function(data){
+					console.log(data);
+					$scope.connected = true;
+					$scope.connecting = false;
+					$rootScope.connected = true;
+					SharedState.turnOff('loadingOverlay');
+					bluetoothService.subscribe(dataHandler);
+				}, function(err){
+					SharedState.turnOff('loadingOverlay');
+					console.log('ERROR CONNECTING BLUETOOTH: ',err);
+					$scope.connected = false;
+					$scope.connecting = false;
+					$rootScope.connected = false;
+					SharedState.turnOn('bluetoothNotConnecting');
+				}
+			);
+		}
+
+		$scope.getBluetoothList = function() {
+			$rootScope.loadingOverlayText = 'LOADING<br/>May take up to a minute...';
+			SharedState.turnOn('loadingOverlay');
+			bluetoothService.getUnpaired()
+			.then(function(devices){
+				$scope.bluetoothDevices = devices;
+				SharedState.turnOff('loadingOverlay');
+			});
 		}
 
 	}
 
-})
+})(this);
