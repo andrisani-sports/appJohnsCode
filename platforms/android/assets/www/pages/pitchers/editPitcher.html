@@ -1,47 +1,47 @@
 <div class="scrollable">
  <div class="scrollable-content section">
    
-  <form role="form" ng-submit="updatePitcher(pitcher)">
+  <form role="form" ng-submit="updatePitcher(pitcherEdit)">
     <fieldset>
-      <legend>Update: {{pitcher.name}}</legend>
+      <legend>Update: {{pitcherEdit.name}}</legend>
       
       <div class="form-group">
         <label>Pitcher Name</label>
-        <input type="text" ng-model="pitcher.name" class="form-control" placeholder="{{pitcher.name}}" required>
+        <input type="text" ng-model="pitcherEdit.name" class="form-control" placeholder="{{pitcherEdit.name}}" required>
       </div>
 
       <div class="form-group">
         <label>Jersey Number</label>
-        <input type="text" ng-model="pitcher.jersey_number" class="form-control" placeholder="{{pitcher.jersey_number}}" required>
+        <input type="text" ng-model="pitcherEdit.jersey_number" class="form-control" placeholder="{{pitcherEdit.jersey_number}}" required>
       </div>
 
       <div class="form-group">
         <label>Age</label>
-        <input type="text" ng-model="pitcher.age" class="form-control" placeholder="{{pitcher.age}}" required>
+        <input type="text" ng-model="pitcherEdit.age" class="form-control" placeholder="{{pitcherEdit.age}}" required>
       </div>
 
       <div class="form-group">
         <label>Height (inches)</label>
-        <input type="text" ng-model="pitcher.height" class="form-control" placeholder="{{pitcher.height}}" required>
+        <input type="text" ng-model="pitcherEdit.height" class="form-control" placeholder="{{pitcherEdit.height}}" required>
       </div>
 
       <div class="form-group">
         <label>Weight (lbs)</label>
-        <input type="text" ng-model="pitcher.weight" class="form-control" placeholder="{{pitcher.weight}}" required>
+        <input type="text" ng-model="pitcherEdit.weight" class="form-control" placeholder="{{pitcherEdit.weight}}" required>
       </div>
 
       <div class="form-group">
         <label>Stride Length (inches)</label>
-        <input type="text" ng-model="pitcher.stride_length" class="form-control" placeholder="{{pitcher.stride_length}}" required>
+        <input type="text" ng-model="pitcherEdit.stride_length" class="form-control" placeholder="{{pitcherEdit.stride_length}}" required>
       </div>
 
       <div class="form-group">
         <label>Device Height (inches)</label>
-        <input type="text" ng-model="pitcher.device_height" class="form-control" placeholder="{{pitcher.device_height}}" required>
+        <input type="text" ng-model="pitcherEdit.device_height" class="form-control" placeholder="{{pitcherEdit.device_height}}" required>
       </div>
       
       <!-- Set this equal to the team id associated with the logged in user -->
-      <!-- <input type="hidden" ng-model="pitcher.team" class="form-control" value="{{pitcher.team}}"> -->
+      <!-- <input type="hidden" ng-model="pitcherEdit.team" class="form-control" value="{{pitcherEdit.team}}"> -->
 
     </fieldset>
     <hr>

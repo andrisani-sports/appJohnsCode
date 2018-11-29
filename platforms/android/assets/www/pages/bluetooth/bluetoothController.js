@@ -21,7 +21,7 @@
 					console.log(data);
 					$scope.connected = true;
 					$scope.connecting = false;
-					$rootScope.connected = true;
+					$rootScope.bluetoothConnected = true;
 					SharedState.turnOff('loadingOverlay');
 					bluetoothService.subscribe(dataHandler);
 				}, function(err){
@@ -29,14 +29,14 @@
 					console.log('ERROR CONNECTING BLUETOOTH: ',err);
 					$scope.connected = false;
 					$scope.connecting = false;
-					$rootScope.connected = false;
+					$rootScope.bluetoothConnected = false;
 					SharedState.turnOn('bluetoothNotConnecting');
 				}
 			);
 		}
 
 		$scope.getBluetoothList = function() {
-			$rootScope.loadingOverlayText = 'LOADING<br/>May take up to a minute...';
+			$rootScope.loadingOverlayText = 'LOADING -- May take up to 30 seconds...';
 			SharedState.turnOn('loadingOverlay');
 			bluetoothService.getUnpaired()
 			.then(function(devices){

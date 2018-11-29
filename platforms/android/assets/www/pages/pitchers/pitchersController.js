@@ -1,11 +1,17 @@
 (function(gScope){
 	
 angular.module(gScope.AppNameId)
-	.controller('pitchersController', ['$scope', '$rootScope', '$log', '$location', '$routeParams', 'chartService', 'PitcherService', init]);
+	.controller('pitchersController', ['$scope', '$rootScope', '$log', '$location', '$routeParams', 'chartService', 'PitcherService', '$routeParams', init]);
 
-function init($scope, $rootScope, $log, $location, $routeParams, chartService, PitcherService){
+function init($scope, $rootScope, $log, $location, $routeParams, chartService, PitcherService, $routeParams){
 
 	console.log('init pitchersController...');
+
+	if($routeParams.id){
+		PitcherService.getPitcher($routeParams.id).then(function(pitcher){
+			$rootScope.pitcherEdit = pitcher;
+		});
+	}
 
 	$scope.getPitchers = function(){
 		console.log('init pitchersController...');

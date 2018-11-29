@@ -145,7 +145,8 @@ angular.module('services.pitcher', [])
         height : pitcher.height,
         weight : pitcher.weight,
         stride_length : pitcher.stride_length,
-        device_height : pitcher.device_height
+        device_height : pitcher.device_height,
+        unique_id: pitcher.unique_id
       }
 
       dataService.saveObj('pitchers',data)

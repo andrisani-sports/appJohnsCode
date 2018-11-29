@@ -278,19 +278,21 @@ console.log('updated baseline in Pitcher data obj: result',result);
 			SharedState.turnOn('choosePitcher');
 			return false;
 		}
-		if($scope.connected == false){
-			SharedState.turnOn('chooseBluetoothClient');
+		if($rootScope.bluetoothConnected == false){
+			alert('You need to connect to a bluetooth device...');
+			$location.path('/bluetooth/setup');
 			return false;
 		}
 		$scope.connecting = true;
 		$rootScope.loadingOverlayText = 'CONNECTING';
 		SharedState.turnOn('loadingOverlay');
-		bluetoothService.connect().then(
+		bluetoothService.connect()
+		.then(
 			function(data){
 				console.log(data);
 				$scope.connected = true;
 				$scope.connecting = false;
-				$rootScope.connected = true;
+				$rootScope.bluetoothConnected = true;
 				SharedState.turnOff('loadingOverlay');
 				bluetoothService.subscribe(dataHandler);
 			}, function(err){
@@ -298,7 +300,7 @@ console.log('updated baseline in Pitcher data obj: result',result);
 				console.log('ERROR CONNECTING BLUETOOTH: ',err);
 				$scope.connected = false;
 				$scope.connecting = false;
-				$rootScope.connected = false;
+				$rootScope.bluetoothConnected = false;
 				SharedState.turnOn('bluetoothNotConnecting');
 			}
 		);		

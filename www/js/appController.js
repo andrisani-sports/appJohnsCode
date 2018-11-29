@@ -20,7 +20,7 @@ function($log, $scope, fhsCordova, $rootScope, SharedState, AccountService, $loc
 	$rootScope.currLastPull;
 	$rootScope.currBaseline;
 	$rootScope.online = false;
-	$rootScope.connected = false; // for Bluetooth connection
+	$rootScope.bluetoothConnected = false;
 	$rootScope.loadingOverlayText = '';
 	$rootScope.loginError = '';
 
